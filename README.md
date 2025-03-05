@@ -126,4 +126,4 @@ This will start the server at `http://localhost:8000`. You can access the app in
 
 ---
 
-Thank you for checking out the Telegram Clone Web App! If you have any questions, feel free to reach out. Happy coding!
+Thank you for checking out the project! If you have any questions, feel free to reach out. Happy coding!
