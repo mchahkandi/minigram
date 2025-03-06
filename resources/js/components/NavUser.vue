@@ -4,8 +4,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type SharedData, type User } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { ChevronsUpDown } from 'lucide-vue-next';
-import UserMenuContent from './UserMenuContent.vue';
+import { Pencil } from 'lucide-vue-next';
+import NewChat from './NewChat.vue';
 
 const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
@@ -13,16 +13,15 @@ const user = page.props.auth.user as User;
 
 <template>
     <SidebarMenu>
-        <SidebarMenuItem>
+        <SidebarMenuItem  class="mr-auto">
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
-                    <SidebarMenuButton size="lg" class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                        <UserInfo :user="user" />
-                        <ChevronsUpDown class="ml-auto size-4" />
+                    <SidebarMenuButton variant="outline" size="lg" class="group bg-white size-12 justify-center rounded-full">
+                        <Pencil class="dark:fill-sidebar dark:text-sidebar dark:group-hover:fill-sidebar-primary-foreground dark:group-hover:text-sidebar-primary-foreground" />
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg" side="bottom" align="end" :side-offset="4">
-                    <UserMenuContent :user="user" />
+                    <NewChat />
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>
