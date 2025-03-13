@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-
+use App\Models\User;
 class ContactController extends Controller
 {
     /**
@@ -33,7 +34,29 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone_number' => 'required|digits:11|exists:users,phone_number',
+        ]);
+
+        $user = User::where('phone_number', $data['phone_number'])->first();
+
+        if ($user->id === auth()->id()) {
+            return back()->withErrors(['phone_number' => 'شما نمی توانید خودتان را به عنوان مخاطب اضافه کنید.']);
+        }
+
+        $contactData = [
+            'contact_id' => $user->id,
+            'user_id' => auth()->id()
+        ];
+
+        auth()->user()->contacts()->updateOrCreate(
+            $contactData,
+            ['name' => $data['name']]
+        );
+
+        // Redirect back with success message
+        return Redirect::route('contacts.index')->with('success', 'Contact created/updated successfully.');
     }
 
     /**

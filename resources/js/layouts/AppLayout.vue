@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout>
         <slot />
     </AppLayout>
 </template>

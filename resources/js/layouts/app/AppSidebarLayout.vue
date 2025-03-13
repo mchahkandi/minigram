@@ -39,10 +39,8 @@
 <!--            </a>-->
 <!--        </div>-->
 
-        <main class="py-10 lg:pl-72">
-            <div class="px-4 sm:px-6 lg:px-8">
-                <!-- Your content -->
-            </div>
+        <main class="lg:pl-96">
+            <slot/>
         </main>
     </div>
 </template>
