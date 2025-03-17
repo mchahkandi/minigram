@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('messagable_id');
             $table->string('messagable_type');
-            $table->foreignId('user_id')->constrained('users', 'user_id');
+            $table->foreignId('user_id')->constrained('users');
             $table->text('content');
-            $table->foreignId('reply_id')->nullable()->constrained('messages', 'id');
+            $table->foreignId('reply_id')->nullable()->constrained('messages');
             $table->tinyInteger('is_read')->default(0);
             $table->timestamps();
         });

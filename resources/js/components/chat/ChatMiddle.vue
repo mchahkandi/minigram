@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" class="scrollbar-hidden flex grow flex-col overflow-y-scroll px-5 py-5">
+    <div ref="messagesContainer" class="h-full w-full pl-32 pr-48 scrollbar-hidden flex grow flex-col overflow-y-scroll ">
         <div v-for="(message, index) in props.messages" :key="index">
             <Message :message="message" />
         </div>
@@ -8,11 +8,27 @@
 
 <script setup>
 import Message from './Message.vue';
-import { computed } from 'vue';
+import { nextTick, ref, watch } from "vue";
 
 const props = defineProps({
-    messages: Object
-})
+    messages: Array
+});
+
+const messagesContainer = ref(null);
+
+watch(
+    () => props.messages,
+    async () => {
+        await nextTick();
+        if (messagesContainer.value) {
+            messagesContainer.value.scrollTo({
+                top: messagesContainer.value.scrollHeight,
+                behavior: "smooth"
+            });
+        }
+    },
+    { deep: true }
+);
 
 </script>
 

@@ -41,6 +41,36 @@ class User extends Authenticatable
         return $this->hasMany(Contact::class);
     }
 
+    public function chatsAsUserOne(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'user_one_id');
+    }
+
+    // User has many chats as user_two
+    public function chatsAsUserTwo(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'user_two_id');
+    }
+
+    // User can have many chats in total
+    public function chats(): HasMany
+    {
+        return $this->chatsAsUserOne()->union($this->chatsAsUserTwo());
+    }
+
+    public function createNewChat(int $user_id)
+    {
+        if (!$user_id) {
+            throw new \Exception('User ID must be set');
+        }
+
+        if ($user_id == auth()->id()) {
+            return back()->with('error', 'You cannot send message to yourself.');
+        }
+
+        $this->chats()->create(['user_two_id' => $user_id]);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
