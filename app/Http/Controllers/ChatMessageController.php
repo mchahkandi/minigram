@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatMessageSent;
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,8 @@ class ChatMessageController extends Controller
             'user_id' => Auth::id(),
             'content' => $request->input('content'),
         ]);
+
+        broadcast(new ChatMessageSent($message));
 
         return back()->with(['message' => $message]);
     }
