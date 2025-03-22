@@ -54,11 +54,9 @@ const submit = () => {
                     </div>
 
                 </div>
-
-                <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Log in
-                </Button>
+                
+                <button type="submit" class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />ورود</button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">

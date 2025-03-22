@@ -2,6 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
+import ChatLayout from '@/components/chat/ChatLayout.vue';
 
 
 </script>
@@ -10,6 +11,6 @@ import { Head } from '@inertiajs/vue3';
     <Head title="Dashboard" />
 
     <AppLayout>
-
+        <ChatLayout/>
     </AppLayout>
 </template>
