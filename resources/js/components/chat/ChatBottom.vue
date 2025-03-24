@@ -107,7 +107,7 @@ const autoResize = (event) => {
 };
 
 const onSelectEmoji = (emoji) => {
-    message.value += emoji.i;
+    form.content += emoji.i;
 };
 
 const toggleEmojiPicker = () => {

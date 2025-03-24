@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import Message from './Message.vue';
 import { nextTick, onMounted, ref, watch } from 'vue';
+import { useScrollBottom } from '@/composables/useScrollBottom';
 
 const props = defineProps({
     messages: Object,
@@ -20,6 +21,7 @@ const props = defineProps({
 
 const messagesContainer = ref(null);
 const localMessages = ref({ ...props.messages } || {});
+const { scrollToBottom } = useScrollBottom(messagesContainer);
 
 watch(
     () => props.messages,
@@ -33,12 +35,7 @@ watch(
     () => localMessages.value,
     async () => {
         await nextTick();
-        if (messagesContainer.value) {
-            messagesContainer.value.scrollTo({
-                top: messagesContainer.value.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
+        scrollToBottom();
     },
     { deep: true }
 );
@@ -49,6 +46,7 @@ onMounted(() => {
             console.log(response);
             localMessages.value[response.message.id] = response.message;
         });
+    scrollToBottom();
 });
 </script>
 
