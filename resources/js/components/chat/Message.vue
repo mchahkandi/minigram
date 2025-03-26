@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import MessageMenu from '@/components/chat/MessageMenu.vue';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -13,15 +14,54 @@ const props = defineProps<{
     };
 }>();
 
-const isSelf = computed(() => user.value.id === props.message.id);
+const isSelf = computed(() => user.value.id === props.message.user_id);
+
+const showContextMenu = ref(false);
+const contextMenuX = ref(0);
+const contextMenuY = ref(0);
+
+const handleCloseContextMenu = () => {
+    showContextMenu.value = false;
+};
+
+const handleContextMenu = (event: MouseEvent) => {
+    contextMenuX.value = event.pageX;
+    contextMenuY.value = event.pageY;
+    showContextMenu.value = true;
+}
+
+const contextConfig = {
+    handler: handleCloseContextMenu,
+    events: ["contextmenu"],
+};
+
+const replyMessage = (id: number) => {
+    console.log("reply message with id:", id);
+}
+
+const deleteMessage = (id: number) => {
+    console.log("Delete message with id:", id);
+}
+
+const hideContextMenu = () => {
+    showContextMenu.value = false;
+}
+
+onMounted(() => {
+    document.addEventListener('click', hideContextMenu);
+});
+
 </script>
 
 <template>
-    <div class="select-none">
-        <div class="xs:mb-6 md:mb-5 flex" :class="isSelf ? 'justify-start' : 'justify-end'">
+    <div class="select-none" >
+        <div class="xs:mb-6 md:mb-5 flex" :class="isSelf ? 'justify-end' : 'justify-start'">
 
             <div class="flex items-end">
                 <div
+                    @click="handleCloseContextMenu"
+                    v-click-outside="contextConfig"
+                    @contextmenu.prevent="handleContextMenu"
                     class="group max-w-[31.25rem] p-4 rounded-b transition duration-500"
                     :class="{
                         'rounded-tl rounded-xl ml-4 order-3 bg-white': isSelf,
@@ -45,6 +85,14 @@ const isSelf = computed(() => user.value.id === props.message.id);
 <!--                </div>-->
             </div>
         </div>
+        <MessageMenu
+            v-if="showContextMenu"
+            :messageId="props.message.id"
+            :x="contextMenuX"
+            :y="contextMenuY"
+            @edit="replyMessage"
+            @delete="deleteMessage"
+        />
     </div>
 </template>
 
