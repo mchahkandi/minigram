@@ -6,7 +6,8 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import './echo';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-import vClickOutside from "click-outside-vue3"
+import { createPinia } from 'pinia';
+import vClickOutside from "click-outside-vue3";
 
 
 // Extend ImportMeta interface for Vite...
@@ -24,6 +25,8 @@ declare module 'vite/client' {
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+const pinia = createPinia()
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
@@ -32,6 +35,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(vClickOutside)
+            .use(pinia)
             .mount(el);
     },
     progress: {

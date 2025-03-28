@@ -2,6 +2,9 @@
 import { computed, ref, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import MessageMenu from '@/components/chat/MessageMenu.vue';
+import Button from '@/components/Button.vue';
+import { LoaderCircle } from 'lucide-vue-next';
+import Modal from '@/components/Modal.vue';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -20,6 +23,9 @@ const showContextMenu = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 
+const deleteModalOpen = ref(false);
+
+
 const handleCloseContextMenu = () => {
     showContextMenu.value = false;
 };
@@ -35,20 +41,14 @@ const contextConfig = {
     events: ["contextmenu"],
 };
 
-const replyMessage = (id: number) => {
-    console.log("reply message with id:", id);
+
+function openDeleteModal() {
+    deleteModalOpen.value = true;
 }
 
-const deleteMessage = (id: number) => {
-    console.log("Delete message with id:", id);
-}
-
-const hideContextMenu = () => {
-    showContextMenu.value = false;
-}
 
 onMounted(() => {
-    document.addEventListener('click', hideContextMenu);
+    document.addEventListener('click', handleCloseContextMenu);
 });
 
 </script>
@@ -87,12 +87,30 @@ onMounted(() => {
         </div>
         <MessageMenu
             v-if="showContextMenu"
-            :messageId="props.message.id"
+            :handle-close-context-menu="handleCloseContextMenu"
+            :message="props.message"
             :x="contextMenuX"
             :y="contextMenuY"
-            @edit="replyMessage"
-            @delete="deleteMessage"
+            @delete-message="openDeleteModal"
         />
+
+        <Modal :open="deleteModalOpen" @close="deleteModalOpen = false">
+            <div class="p-4">
+                <h2 class="mb-4 text-lg font-semibold"> حذف پیام </h2>
+                <form  class="flex flex-col gap-6">
+                    <div class="grid gap-6">
+                        <p>از حذف پیام مطمئن هستید؟</p>
+                        <div class="flex gap-2">
+                            <Button type="submit" class="mt-4 w-full" :tabindex="4" >
+                                <LoaderCircle  class="h-4 w-4 animate-spin" />
+                                حذف
+                            </Button>
+                            <button class="mt-4 w-full rounded-md bg-gray-200" @click.prevent="deleteModalOpen = false">بازگشت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </div>
 </template>
 
