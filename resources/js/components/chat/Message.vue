@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { usePage, router } from '@inertiajs/vue3'
 import MessageMenu from '@/components/chat/MessageMenu.vue';
 import Button from '@/components/Button.vue';
 import { LoaderCircle } from 'lucide-vue-next';
@@ -44,6 +44,12 @@ const contextConfig = {
 
 function openDeleteModal() {
     deleteModalOpen.value = true;
+}
+
+function deleteMessage () {
+    router.delete(route('messages.destroy', [props.message.id]), {
+        onSuccess: () => deleteModalOpen.value = false,
+    })
 }
 
 
@@ -97,18 +103,15 @@ onMounted(() => {
         <Modal :open="deleteModalOpen" @close="deleteModalOpen = false">
             <div class="p-4">
                 <h2 class="mb-4 text-lg font-semibold"> حذف پیام </h2>
-                <form  class="flex flex-col gap-6">
                     <div class="grid gap-6">
                         <p>از حذف پیام مطمئن هستید؟</p>
                         <div class="flex gap-2">
-                            <Button type="submit" class="mt-4 w-full" :tabindex="4" >
-                                <LoaderCircle  class="h-4 w-4 animate-spin" />
+                            <Button @click.prevent="deleteMessage" class="mt-4 w-full" :tabindex="4" >
                                 حذف
                             </Button>
                             <button class="mt-4 w-full rounded-md bg-gray-200" @click.prevent="deleteModalOpen = false">بازگشت</button>
                         </div>
                     </div>
-                </form>
             </div>
         </Modal>
     </div>

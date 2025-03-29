@@ -19,6 +19,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::resource('contacts', ContactController::class)->names('contacts');
     Route::get('chats/{id?}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
+    Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');
 
 });
 
