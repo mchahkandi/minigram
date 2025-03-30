@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -56,6 +57,16 @@ class User extends Authenticatable
     public function chats(): HasMany
     {
         return $this->chatsAsUserOne()->union($this->chatsAsUserTwo());
+    }
+
+    public function conversations()
+    {
+        $chats = Auth::user()->chats()
+            ->with(['userOne', 'userTwo','messages' => function ($query) {
+                $query->latest()->take(1);
+            }],
+            )->get();
+        return $chats;
     }
 
     public function createNewChat(int $user_id)
