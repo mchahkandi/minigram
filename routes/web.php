@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,6 +21,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('chats/{id?}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
     Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');
+
+    Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
 
 });
 
