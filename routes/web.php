@@ -17,7 +17,9 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard'); // Name added
 
-    Route::resource('contacts', ContactController::class)->names('contacts');
+    Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
+    Route::post('contacts', [ContactController::class, 'store'])->name('contacts.store');
+
     Route::get('chats/{id?}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
     Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');

@@ -5,7 +5,8 @@ export const useGlobalStore = defineStore('global', {
 
     state: () => {
         return {
-            showNewRoomSlider: ref(true),
+            showNewRoomSlider: ref(false),
+            showContactsList: ref(false),
 
         }
     },

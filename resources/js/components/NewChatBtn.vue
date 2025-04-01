@@ -11,13 +11,13 @@
                 <div class="py-1">
                     <MenuItem v-slot="{ active }">
 
-                        <Link href="#" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']">کانال جدید<Megaphone/></Link>
+                        <button @click.prevent="globalStore.showNewRoomSlider = true" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'w-full flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']">کانال جدید<Megaphone/></button>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
                         <Link href="#" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']">گروه جدید<Users/></Link>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
-                        <Link :href="route('contacts.index')" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']">پیام جدید<User/></Link>
+                        <button @click.prevent="globalStore.showContactsList = true" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'w-full flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']">پیام جدید<User/></button>
                     </MenuItem>
                 </div>
             </MenuItems>
@@ -29,4 +29,9 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Pencil, Megaphone, Users, User } from 'lucide-vue-next'
 import { Link } from '@inertiajs/vue3'
+import { useGlobalStore } from '@/stores/GlobalStore.js';
+import Button from '@/components/Button.vue';
+
+const globalStore = useGlobalStore()
+
 </script>

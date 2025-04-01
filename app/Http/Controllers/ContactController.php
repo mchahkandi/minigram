@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -14,11 +15,9 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = auth()->user()->contacts()->get();
+        $contacts = auth()->user()->contacts()->with('user')->get();
 
-        return Inertia::render('contacts/Index', [
-            'contacts' => $contacts
-        ]);
+        return response()->json($contacts);
     }
 
     /**
@@ -56,7 +55,7 @@ class ContactController extends Controller
         );
 
         // Redirect back with success message
-        return Redirect::route('contacts.index')->with('success', 'Contact created/updated successfully.');
+        return response()->json(['message' => 'success'],201);
     }
 
     /**

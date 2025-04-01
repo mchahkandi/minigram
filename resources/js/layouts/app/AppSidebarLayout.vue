@@ -45,7 +45,8 @@
         <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
         <!--            </a>-->
         <!--        </div>-->
-
+        <CreateRoom/>
+        <ContactList/>
         <main class="hidden md:flex lg:pl-96">
             <slot />
         </main>
@@ -54,22 +55,13 @@
 
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { computed, onMounted, ref } from 'vue';
-import { Home } from 'lucide-vue-next';
 import NewChatBtn from '@/components/NewChatBtn.vue';
 import { usePage } from '@inertiajs/vue3';
+import CreateRoom from '@/components/CreateRoom.vue';
+import ContactList from '@/components/ContactList.vue';
 
 const page = usePage();
 
 const conversations = page.props.conversations.data;
 
-onMounted(() => {
-    console.log(conversations);
-});
-
-const navigation = [
-    { name: 'ali', href: '#', icon: Home, current: false },
-    { name: 'taghi', href: '#', icon: Home, current: false },
-    { name: 'asghar', href: '#', icon: Home, current: false },
-];
 </script>
