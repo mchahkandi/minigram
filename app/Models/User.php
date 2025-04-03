@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,7 +67,22 @@ class User extends Authenticatable
                 $query->latest()->take(1);
             }],
             )->get();
-        return $chats;
+
+        $rooms = Auth::user()->rooms()
+            ->with(['messages' => function ($query) {
+            $query->latest()->take(1);
+            }],
+            )->get();
+
+
+        $conversations = $chats->concat($rooms);
+
+        return $conversations;
+    }
+
+    public function rooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Room::class,'members', 'user_id', 'room_id');
     }
 
     public function createNewChat(int $user_id)

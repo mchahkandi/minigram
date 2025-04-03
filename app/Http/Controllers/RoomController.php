@@ -22,6 +22,8 @@ class RoomController extends Controller
 
         $room = Room::create($data);
 
+        $room->members()->attach(Auth::id());
+
         return back()->with(['message' => 'deleted successfully'], 200);
     }
 }

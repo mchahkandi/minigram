@@ -11,15 +11,15 @@
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">
                         <li>
                             <ul role="list" class="-mx-2">
-                                <li v-for="item in conversations" :key="item.name">
+                                <li v-for="item in conversations" :key="item.title">
                                     <Link
-                                        :href="route(item.type == 'chat' ? 'chats.show' : '',{id: item.route})"
+                                        :href="route(item.type == 'chat' ? 'chats.show' : 'dashboard',{id: item.route})"
                                         :class="[
                                             item.current ? 'bg-gray-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50',
                                             'group flex gap-x-3 rounded-md p-4 text-sm font-semibold leading-6',
                                         ]"
                                     >
-                                        <img :src="item.avatar ?? '/assets/img/background.png'" alt="User Avatar" class="size-14 rounded-full" />
+                                        <Avatar :fullName="item.title" :avatarUrl="item.avatar"/>
                                         <div class="flex flex-col justify-between">
                                             <h2 class="text-base font-bold text-gray-900">{{ item.title }}</h2>
                                             <p class="truncate p-1 text-gray-500">{{ item.last_message }}</p>
@@ -59,6 +59,7 @@ import NewChatBtn from '@/components/NewChatBtn.vue';
 import { usePage } from '@inertiajs/vue3';
 import CreateRoom from '@/components/CreateRoom.vue';
 import ContactList from '@/components/ContactList.vue';
+import Avatar from '@/components/Avatar.vue';
 
 const page = usePage();
 

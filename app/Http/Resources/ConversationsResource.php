@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Chat;
+use App\Models\Room;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +23,19 @@ class ConversationsResource extends JsonResource
         $user = null;
         $type = Str::lower(Str::afterLast(get_class($this->resource), '\\'));
 
-        if ($this->userOne->id == Auth::id() ) {
-            $user = $this->userTwo;
-        }else{
-            $user = $this->userOne;
+        if ($this->resource instanceof Chat) {
+            if ($this->userOne->id == Auth::id()) {
+                $user = $this->userTwo;
+            } else {
+                $user = $this->userOne;
+            }
         }
         return [
-            'title' => $user ? $user->name : '',
-            'avatar' => $user ? $user->avatar : '',
-            'route' => $user->id,
+            'title' => $user ? $user->name : $this->name,
+            'avatar' => $user ? $user->avatar : $this->avatar,
+            'route' => $user? $user->id : $this->id,
             'type' => $type,
-            'last_message' => $this->messages[0]?->content
+            'last_message' => $this->messages[0]?->content ?? ''
         ];
     }
 }
