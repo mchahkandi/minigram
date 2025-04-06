@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class RoomController extends Controller
 {
@@ -25,5 +26,13 @@ class RoomController extends Controller
         $room->members()->attach(Auth::id());
 
         return back()->with(['message' => 'deleted successfully'], 200);
+    }
+
+    public function show(Room $room)
+    {
+        return Inertia::render('rooms/Show', [
+            'room' => $room,
+            'messages' => $room->messages
+        ]);
     }
 }

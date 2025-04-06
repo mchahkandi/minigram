@@ -7,9 +7,9 @@
             <ChatInfo>
                 <template #trigger>
                     <div class="hover:cursor-pointer flex gap-4">
-                        <img :src="props.user.avatar ?? '/assets/img/avatar.png'" alt="User Avatar" class="size-12 rounded-full" />
+                        <Avatar :fullName="conversation.model.name" :avatarUrl="conversation.model.avatar" />
                         <div class=" flex flex-col">
-                            <h1 class="text-lg font-semibold text-gray-800">{{ props.user.name }}</h1>
+                            <h1 class="text-lg font-semibold text-gray-800">{{ conversation.model.name }}</h1>
                             <p class="text-sm text-gray-500">last seen recently</p>
                         </div>
                     </div>
@@ -26,12 +26,12 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue';
 import { ArrowLeft, EllipsisVertical } from 'lucide-vue-next';
 import ChatInfo from '@/components/chat/ChatInfo.vue';
-const props = defineProps({
-    user: Object
-});
+import { useConversationStore } from '@/stores/ConversationStore.js';
+import Avatar from '@/components/Avatar.vue';
+
+const conversation = useConversationStore();
 
 const goBack = () => {
     console.log("Going back");

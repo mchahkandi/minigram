@@ -13,7 +13,7 @@
                             <ul role="list" class="-mx-2">
                                 <li v-for="item in conversations" :key="item.title">
                                     <Link
-                                        :href="route(item.type == 'chat' ? 'chats.show' : 'dashboard',{id: item.route})"
+                                        :href="route(item.type == 'chat' ? 'chats.show' : 'rooms.show',{id: item.route})"
                                         :class="[
                                             item.current ? 'bg-gray-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50',
                                             'group flex gap-x-3 rounded-md p-4 text-sm font-semibold leading-6',
