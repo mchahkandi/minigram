@@ -13,14 +13,17 @@
 import Message from './Message.vue';
 import { nextTick, onMounted, ref, watch } from 'vue';
 import { useScrollBottom } from '@/composables/useScrollBottom';
+import { useConversationStore } from '@/stores/ConversationStore';
 
 const props = defineProps({
     messages: Object,
     chat: Object
 });
 
+const conversation = useConversationStore();
+
 const messagesContainer = ref(null);
-const localMessages = ref({ ...props.messages } || {});
+const localMessages = ref({ ...conversation.messages } || {});
 const { scrollToBottom } = useScrollBottom(messagesContainer);
 
 watch(

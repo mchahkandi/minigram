@@ -22,6 +22,7 @@ class ChatMessageController extends Controller
         $message = $chat->messages()->create([
             'user_id' => Auth::id(),
             'content' => $request->input('content'),
+            'reply_id' => $request->input('reply_id'),
         ]);
 
         broadcast(new ChatMessageSent($message));

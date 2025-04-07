@@ -14,8 +14,15 @@ export const useConversationStore = defineStore('conversation', {
     },
 
     actions: {
-        clearMessages() {
-            this.messages = [];
+        handleReply(id) {
+            console.log(id);
+            this.replyId = id;
+            this.isReplying = true;
+            console.log(this.replyId);
+        },
+        handleCloseReply() {
+            this.replyId = null;
+            this.isReplying = false;
         },
     },
 });

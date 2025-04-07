@@ -7,7 +7,7 @@
             class="fixed z-50 w-[12.5rem] bg-white border border-gray-300 shadow-lg rounded-md py-2"
         >
             <ul class="list-none p-0 m-0 text-right">
-                <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click="handleCloseContextMenu">پاسخ</li>
+                <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click=" () => { conversation.handleReply(props.message.id); handleCloseContextMenu(); }">پاسخ</li>
                 <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click=" () => { copyMessage(); handleCloseContextMenu(); }">کپی</li>
                 <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click=" () => { deleteMessage(); handleCloseContextMenu(); }">حذف</li>
             </ul>
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useConversationStore } from '@/stores/ConversationStore';
 
 const props = defineProps<{
     handleCloseContextMenu: () => void;
@@ -33,13 +34,10 @@ const emits = defineEmits<{
 
 const visible = ref(true);
 
-
-const replyMessage = (id: number) => {
-    console.log("reply message with id:", id);
-}
+const conversation = useConversationStore();
 
 const copyMessage = () => {
-    navigator.clipboard.writeText(props.message.content)
+    navigator.clipboard.writeText(props.message.content);
 }
 
 const deleteMessage = () => {
