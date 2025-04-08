@@ -15,14 +15,14 @@
                                     <Link
                                         :href="route(item.type == 'chat' ? 'chats.show' : 'rooms.show',{id: item.route})"
                                         :class="[
-                                            item.current ? 'bg-gray-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50',
+                                            isCurrentConversation(item) ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-50',
                                             'group flex gap-x-3 rounded-md p-4 text-sm font-semibold leading-6',
                                         ]"
                                     >
                                         <Avatar :fullName="item.title" :avatarUrl="item.avatar"/>
                                         <div class="flex flex-col justify-between">
-                                            <h2 class="text-base font-bold text-gray-900">{{ item.title }}</h2>
-                                            <p class="truncate p-1 text-gray-500">{{ item.last_message }}</p>
+                                            <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold ']">{{ item.title }}</h2>
+                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500']">{{ item.last_message }}</p>
                                         </div>
                                     </Link>
                                 </li>
@@ -60,9 +60,17 @@ import { usePage } from '@inertiajs/vue3';
 import CreateRoom from '@/components/CreateRoom.vue';
 import ContactList from '@/components/ContactList.vue';
 import Avatar from '@/components/Avatar.vue';
+import { useConversationStore } from '@/stores/ConversationStore';
 
 const page = usePage();
 
 const conversations = page.props.conversations.data;
+
+const conversation = useConversationStore()
+
+const isCurrentConversation = (item) => {
+    return conversation.model.id === item.route &&
+        conversation.type == item.type;
+};
 
 </script>
