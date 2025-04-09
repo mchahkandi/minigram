@@ -1,5 +1,5 @@
 <template>
-    <div class="z-20 w-full absolute top-0 bg-white shadow-md p-3 flex items-center justify-between">
+    <div class="z-20 w-full bg-white shadow-md p-3 mb-4 flex items-center justify-between">
         <div class="flex items-center ml-2 gap-4">
             <button class="md:hidden text-gray-600 hover:text-blue-500" @click="goBack">
                 <ArrowLeft class="size-6 text-gray-700"/>

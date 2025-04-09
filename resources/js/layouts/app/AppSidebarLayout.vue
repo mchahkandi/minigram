@@ -10,7 +10,7 @@
                 <nav class="flex flex-1 flex-col">
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">
                         <li>
-                            <ul role="list" class="-mx-2">
+                            <ul role="list" class="-mx-2 overflow-hidden">
                                 <li v-for="item in conversations" :key="item.title">
                                     <Link
                                         :href="route(item.type == 'chat' ? 'chats.show' : 'rooms.show',{id: item.route})"

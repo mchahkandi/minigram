@@ -118,13 +118,6 @@ const form = useForm({
     files: null,
 });
 
-let user_id = '';
-
-onMounted(() => {
-    const pathSegments = window.location.pathname.split('/');
-    user_id = pathSegments[pathSegments.length - 1];
-});
-
 const autoResize = (event) => {
     const target = event.target;
     target.style.height = 'auto';
@@ -173,8 +166,14 @@ const sendFiles = () => {
     });
 };
 
+const messageRoute = computed(() => {
+    return conversation.type == 'room' ? 'rooms.messages.store' : 'messages.store';
+})
+
+const id = conversation.model.id;
+
 const submit = () => {
-    form.post(route('messages.store', { user_id }), {
+    form.post(route(messageRoute.value, { id }), {
         onSuccess: () => {
             form.reset();
             conversation.handleCloseReply();

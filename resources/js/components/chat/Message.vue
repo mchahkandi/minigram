@@ -5,9 +5,11 @@ import MessageMenu from '@/components/chat/MessageMenu.vue';
 import Button from '@/components/Button.vue';
 import { LoaderCircle } from 'lucide-vue-next';
 import Modal from '@/components/Modal.vue';
+import { useConversationStore } from '@/stores/ConversationStore';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
+const conversation = useConversationStore()
 
 const props = defineProps<{
     message: {
@@ -17,7 +19,7 @@ const props = defineProps<{
     };
 }>();
 
-const isSelf = computed(() => user.value.id === props.message.user_id);
+const isSelf = computed(() => user.value.id === props.message.user_id && conversation.type === 'chat');
 
 const showContextMenu = ref(false);
 const contextMenuX = ref(0);

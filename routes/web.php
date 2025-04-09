@@ -4,6 +4,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomMessageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,6 +27,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
 
     Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
     Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::post('rooms/{room}/messages', [RoomMessageController::class, 'store'])->name('rooms.messages.store');
+
 
 });
 

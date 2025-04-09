@@ -38,7 +38,7 @@ class ChatMessageController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (Auth::id() !== $chat->user_one_id && Auth::id() !== $chat->user_two_id) {
+        if (Auth::id() !== $chat->user_one_id || Auth::id() !== $chat->user_two_id) {
             abort(403, 'Unauthorized action.');
         }
 
