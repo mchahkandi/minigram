@@ -6,6 +6,7 @@ use App\Models\Chat;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ChatController extends Controller
@@ -33,5 +34,16 @@ class ChatController extends Controller
             'messages' => $messages,
         ]);
 
+    }
+
+
+    public function destroy(Chat $chat)
+    {
+        if( Auth::id() !== $chat->user_one_id || Auth::id() !== $chat->user_two_id) {
+            abort(403, 'Unauthorized action.');
+        }
+        $chat->delete();
+
+        return redirect()->route('dashboard');
     }
 }

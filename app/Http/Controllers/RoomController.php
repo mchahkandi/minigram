@@ -35,4 +35,19 @@ class RoomController extends Controller
             'messages' => $room->messages
         ]);
     }
+
+    public function leave(Room $room)
+    {
+        $room->members()->detach(Auth::id());
+    }
+
+    public function destroy(Room $room)
+    {
+        if (Auth::id() !== $room->owner_id) {
+            abort(403);
+        }
+        $room->delete();
+
+        return redirect()->route('dashboard');
+    }
 }
