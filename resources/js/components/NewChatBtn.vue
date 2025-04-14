@@ -30,8 +30,6 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Pencil, Megaphone, Users, User } from 'lucide-vue-next'
 import { Link } from '@inertiajs/vue3'
 import { useGlobalStore } from '@/stores/GlobalStore.js';
-import Button from '@/components/Button.vue';
-
 const globalStore = useGlobalStore()
 
 </script>

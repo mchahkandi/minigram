@@ -39,7 +39,7 @@ class ChatController extends Controller
 
     public function destroy(Chat $chat)
     {
-        if( Auth::id() !== $chat->user_one_id || Auth::id() !== $chat->user_two_id) {
+        if (Auth::id() != $chat->user_one_id && Auth::id() != $chat->user_two_id) {
             abort(403, 'Unauthorized action.');
         }
         $chat->delete();

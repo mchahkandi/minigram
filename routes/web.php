@@ -28,7 +28,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
 
     Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
     Route::delete('rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
-    Route::post('rooms/{room}/leave', [RoomController::class, 'leave'])->name('rooms.leave');
+    Route::delete('rooms/{room}/leave', [RoomController::class, 'leave'])->name('rooms.leave');
     Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::post('rooms/{room}/messages', [RoomMessageController::class, 'store'])->name('rooms.messages.store');
 

@@ -39,6 +39,9 @@ class RoomController extends Controller
     public function leave(Room $room)
     {
         $room->members()->detach(Auth::id());
+
+        return redirect()->route('dashboard');
+
     }
 
     public function destroy(Room $room)
