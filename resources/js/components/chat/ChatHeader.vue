@@ -10,7 +10,7 @@
                         <Avatar :fullName="conversation.model.name" :avatarUrl="conversation.model.avatar" />
                         <div class=" flex flex-col">
                             <h1 class="text-lg font-semibold text-gray-800">{{ conversation.model.name }}</h1>
-                            <p class="text-sm text-gray-500">last seen recently</p>
+                            <p dir="rtl" class="text-sm text-gray-500">{{ conversation.type == 'chat' ? conversation.model.last_seen : `${conversation.model.members_count} مشترک` }}</p>
                         </div>
                     </div>
                 </template>
@@ -72,6 +72,8 @@ import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 const conversation = useConversationStore();
+
+console.log(conversation);
 
 
 const deleteModalOpen = ref(false);

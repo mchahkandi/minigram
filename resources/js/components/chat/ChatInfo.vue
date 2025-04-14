@@ -21,6 +21,7 @@ const data = computed(() => {
         username: conversation.type == 'chat' ? conversation.model.username : conversation.model.link,
         phoneNumber: conversation.model.phone_number ?? '',
         bio: conversation.type == 'chat' ? conversation.model.bio : conversation.model.description,
+        info: conversation.type == 'chat' ? conversation.model.last_seen : `${conversation.model.members_count} مشترک`,
         files: {
             images: 4,
             videos: 5,
@@ -45,7 +46,7 @@ console.log(data);
                 <Avatar :fullName="data.title" :avatarUrl="data.imageUrl" />
                 <div class=" flex flex-col items-start ml-4">
                     <h1 class="text-lg font-semibold text-gray-800">{{ data.title }}</h1>
-                    <p class="text-sm text-gray-500">last seen recently</p>
+                    <p dir="rtl" class="text-sm text-gray-500">{{ data.info }}</p>
                 </div>
                 <XIcon class="ml-auto hover:cursor-pointer" @click.prevent="modalOpen = false" />
             </div>

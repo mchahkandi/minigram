@@ -22,7 +22,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('contacts', [ContactController::class, 'store'])->name('contacts.store');
 
     Route::get('chats/{id?}', [ChatController::class, 'show'])->name('chats.show');
-    Route::delete('chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
+    Route::delete('chats/{user_id}', [ChatController::class, 'destroy'])->name('chats.destroy');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
     Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');
 

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 
 
 class Room extends Model
@@ -18,6 +20,9 @@ class Room extends Model
         'owner_id',
     ];
 
+    protected $appends = ['members_count'];
+
+
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'members', 'room_id', 'user_id');
@@ -27,4 +32,10 @@ class Room extends Model
     {
         return $this->morphMany(Message::class, 'messagable');
     }
+
+    public function getMembersCountAttribute()
+    {
+        return $this->members()->count();
+    }
+
 }

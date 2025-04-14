@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('phone_number', 15)->unique();
             $table->string('avatar')->nullable();
             $table->string('bio', 255)->nullable();
-            $table->timestamp('last_seen')->useCurrent();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -28,6 +30,8 @@ class User extends Authenticatable
         'avatar',
         'password',
     ];
+
+    protected $appends = ['last_seen'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -96,6 +100,20 @@ class User extends Authenticatable
         }
 
         $this->chats()->create(['user_two_id' => $user_id]);
+    }
+
+    public function getLastSeenAttribute()
+    {
+        $session = DB::table('sessions')
+            ->where('user_id', '=', $this->id)
+            ->first();
+        $date = null;
+
+        if ($session && isset($session->last_activity)) {
+            $date = Carbon::parse($session->last_activity)->diffForHumans();
+        }
+
+        return ' آخرین بازدید ' . ($date ?? 'به تازگی');
     }
 
     /**
