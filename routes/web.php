@@ -25,6 +25,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::delete('chats/{user_id}', [ChatController::class, 'destroy'])->name('chats.destroy');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
     Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');
+    Route::get('chat/{user_id}/messages/search', [ChatMessageController::class, 'search'])->name('chats.messages.search');
+
 
     Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
     Route::delete('rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');

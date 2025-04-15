@@ -72,8 +72,8 @@ onMounted(() => {
                     @contextmenu.prevent="handleContextMenu"
                     class="group max-w-[31.25rem] p-4 rounded-b transition duration-500"
                     :class="{
-                        'rounded-tl rounded-xl ml-4 order-3 bg-white': isSelf,
-                        'rounded-tr bg-gray-50 dark:bg-gray-600': !isSelf
+                        'rounded-tl rounded-xl ml-4 order-3 bg-gray-50': isSelf,
+                        'rounded-tr bg-white dark:bg-gray-600': !isSelf
                     }"
                 >
                     <p class="body-2 outline-none text-black opacity-60 dark:text-white dark:opacity-70">

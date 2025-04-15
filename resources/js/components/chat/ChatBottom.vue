@@ -1,5 +1,5 @@
 <template>
-    <div class="z-20 w-full">
+    <div v-show="!(conversation.isSearching)" class="z-10 w-full">
         <div class="relative mt-2 transition-all duration-200 lg:ml-32 lg:mr-48">
             <MessageReply :show="conversation.isReplying" @closeReply="conversation.handleCloseReply" />
         </div>
