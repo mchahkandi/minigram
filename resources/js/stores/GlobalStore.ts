@@ -7,6 +7,7 @@ export const useGlobalStore = defineStore('global', {
         return {
             showNewRoomSlider: ref(false),
             showContactsList: ref(false),
+            showProfileSlider: ref(false),
 
         }
     },
