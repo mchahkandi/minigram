@@ -11,8 +11,14 @@ export default {
     ],
     theme: {
         extend: {
+            colors: {
+                primary: '#1976D2',
+                secondary: '#0D47A1',
+                dark: '#121212',
+                light: '#f5f5f5',
+            },
             fontFamily: {
-                sans: ['Instrument Sans', ...defaultTheme.fontFamily.sans],
+                sans: ['Vazirmatn', 'sans-serif', ...defaultTheme.fontFamily.sans],
             },
         },
     },
