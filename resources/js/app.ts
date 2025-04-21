@@ -8,6 +8,8 @@ import './echo';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createPinia } from 'pinia';
 import vClickOutside from "click-outside-vue3";
+import { useGlobalStore } from '@/stores/GlobalStore';
+
 
 
 // Extend ImportMeta interface for Vite...
@@ -42,3 +44,10 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+import { router } from '@inertiajs/vue3'
+
+router.on('success', (event) => {
+    const myStore = useGlobalStore();
+    myStore.$reset();
+})
