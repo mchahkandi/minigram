@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import SliderContainer from '@/components/SliderContainer.vue';
 import Button from '@/components/Button.vue';
-import { X, Info, Phone, AtSign, EllipsisVertical, Pencil } from 'lucide-vue-next';
+import { X, Info, Phone, AtSign, LogOut, Pencil } from 'lucide-vue-next';
 import { DialogTitle } from '@headlessui/vue';
 import { useGlobalStore } from '@/stores/GlobalStore';
-import { usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import Avatar from '@/components/Avatar.vue';
+import Modal from '@/components/Modal.vue';
+import { ref } from 'vue';
 
 const store = useGlobalStore();
 
@@ -13,21 +15,18 @@ const page = usePage();
 
 const user = page.props.auth.user;
 
+const logoutModalOpen = ref(false);
+
 const handleClose = () => {
     store.showProfileSlider = false;
 };
 
-const handleAvatarChange = (e: Event) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (file) {
-        // آپلود آواتار را اینجا مدیریت کنید
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            user.avatar = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-    }
-};
+function logOut () {
+    router.post(route('logout'), {
+        onSuccess: () => logoutModalOpen.value = false,
+    })
+}
+
 </script>
 
 <template>
@@ -35,8 +34,8 @@ const handleAvatarChange = (e: Event) => {
         <div class="p-6">
             <div class="flex flex-row-reverse items-start justify-between">
                 <div class="flex flex-row-reverse items-center gap-x-4">
-                    <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500">
-                        <EllipsisVertical class="size-6"/>
+                    <button @click.prevent="logoutModalOpen = true" type="button" class="rounded-md bg-white text-red-400 hover:text-red-500">
+                        <LogOut class="size-6"/>
                     </button>
                     <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500">
                         <Pencil class="size-6"/>
@@ -97,6 +96,20 @@ const handleAvatarChange = (e: Event) => {
             </div>
 
         </div>
+        <Modal :open="logoutModalOpen" @close="logoutModalOpen = false">
+            <div class="p-4">
+                <h2 class="mb-4 text-lg font-semibold"> خروج از حساب کاربری </h2>
+                <div class="grid gap-6">
+                    <p>آیا برای خارج شدن مطمئن هستید؟</p>
+                    <div class="flex gap-2">
+                        <Button @click.prevent="logOut" class="mt-4 w-full bg-red-500 hover:bg-red-600" :tabindex="4" >
+                            خروج
+                        </Button>
+                        <button class="mt-4 w-full rounded-md bg-gray-200" @click.prevent="logoutModalOpen = false">بازگشت</button>
+                    </div>
+                </div>
+            </div>
+        </Modal>
     </SliderContainer>
 </template>
 

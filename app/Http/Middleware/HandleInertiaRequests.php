@@ -46,7 +46,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'conversations' => ConversationsResource::collection(auth()->user()->conversations()),
+            'conversations' => fn () => $request->user()
+                ? ConversationsResource::collection(auth()->user()->conversations())
+                : null,
         ];
     }
 }
