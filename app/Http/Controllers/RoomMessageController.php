@@ -32,8 +32,35 @@ class RoomMessageController extends Controller
             'reply_id' => $request->input('reply_id'),
         ]);
 
+        if ($request->has('files')) {
+            foreach ($request->file('files') as $file) {
+
+                $name = strtolower($room->getTable());
+
+                $path = $file->store($name . '/' . $room->id);
+
+                $message->attachments()->create([
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'file_type' => $file->getClientOriginalExtension(),
+                    'file_size' => $file->getSize()
+                ]);
+            }
+        }
+
         broadcast(new RoomMessageSent($message));
 
         return back()->with(['message' => $message]);
+    }
+
+    public function search(Room $room, Request $request)
+    {
+        $data = $request->validate([
+            'content' => 'required|string|max:500',
+        ]);
+
+        $res = $room->messages()->search($data['content']);
+
+        return response()->json($res);
     }
 }

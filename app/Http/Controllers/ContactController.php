@@ -54,8 +54,7 @@ class ContactController extends Controller
             ['name' => $data['name']]
         );
 
-        // Redirect back with success message
-        return response()->json(['message' => 'success'],201);
+        return back()->with(['message' => 'success']);
     }
 
     /**

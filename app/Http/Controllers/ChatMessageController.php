@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatMessageController extends Controller
 {
-    public function store(int $user_id,Request $request)
+    public function store(int $user_id, Request $request)
     {
         $request->validate([
             'content' => 'required|string|max:500',
@@ -25,6 +25,22 @@ class ChatMessageController extends Controller
             'reply_id' => $request->input('reply_id'),
         ]);
 
+        if ($request->has('files')) {
+            foreach ($request->file('files') as $file) {
+
+                $name = strtolower($chat->getTable());
+
+                $path = $file->store($name . '/' . $chat->id);
+
+                $message->attachments()->create([
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'file_type' => $file->getClientOriginalExtension(),
+                    'file_size' => $file->getSize()
+                ]);
+            }
+        }
+
         broadcast(new ChatMessageSent($message));
 
         return back()->with(['message' => $message]);
@@ -38,12 +54,27 @@ class ChatMessageController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (Auth::id() !== $chat->user_one_id || Auth::id() !== $chat->user_two_id) {
+        if (Auth::id() !== $chat->user_one_id && Auth::id() !== $chat->user_two_id) {
             abort(403, 'Unauthorized action.');
         }
 
         $message->delete();
 
         return back()->with(['message' => 'deleted successfully'], 200);
+    }
+
+    public function search(int $user_id, Request $request)
+    {
+        $data = $request->validate([
+            'content' => 'required|string|max:500',
+        ]);
+
+        $chat = Chat::findChat(auth()->id(), $user_id)->first();
+
+        $res = $chat->messages()
+            ->where('content', 'LIKE', '%' . $data['content'] . '%')
+            ->get();
+
+        return response()->json($res);
     }
 }

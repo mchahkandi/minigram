@@ -65,7 +65,7 @@
                         </transition>
                     </Menu>
                 </div>
-                <input id="file" type="file" @input="handleFileInput" multiple class="hidden" ref="fileInput" />
+                <input id="file" type="file" @input="form.files = $event.target.files" multiple class="hidden" ref="fileInput" />
             </div>
 
             <div class="ml-2 size-14 rounded-full bg-white p-4 shadow-sm">
@@ -132,38 +132,9 @@ const toggleEmojiPicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value;
 };
 
-const handleFileInput = (event) => {
-    const files = Array.from(event.target.files);
-    previewFiles.value = files.map((file) => ({
-        name: file.name,
-        type: file.type,
-        caption: '',
-        url: URL.createObjectURL(file), // Create a URL for preview
-    }));
-    showModal.value = true; // Show modal after file selection
-};
-
 const closeModal = () => {
     showModal.value = false;
     previewFiles.value = [];
-};
-
-const sendFiles = () => {
-    // Prepare files to send with their captions
-    const filesWithCaptions = previewFiles.value.map((file) => ({
-        file: file,
-        caption: file.caption,
-    }));
-
-    form.files = filesWithCaptions.map((f) => f.file);
-    form.content = message.value;
-
-    form.post(route('messages.store', { user_id }), {
-        onFinish: () => {
-            form.reset();
-            closeModal();
-        },
-    });
 };
 
 const messageRoute = computed(() => {

@@ -6,6 +6,7 @@ import Button from '@/components/Button.vue';
 import { LoaderCircle } from 'lucide-vue-next';
 import Modal from '@/components/Modal.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
+import Attachments from '@/components/chat/Attachments.vue';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -16,6 +17,7 @@ const props = defineProps<{
         id: number;
         content: string;
         created_at?: string;
+        attachments?: object;
     };
 }>();
 
@@ -54,7 +56,6 @@ function deleteMessage () {
     })
 }
 
-
 onMounted(() => {
     document.addEventListener('click', handleCloseContextMenu);
 });
@@ -80,9 +81,8 @@ onMounted(() => {
                         {{ props.message.content }}
                     </p>
 
-                    <!-- Uncomment if you have attachments -->
-                    <!-- Attachments -->
-                    <!-- <Attachments v-if="props.message.attachments?.length > 0" :message="props.message" :self="isSelf" /> -->
+
+                     <Attachments v-if="props.message.attachments?.length > 0" :message="props.message" :self="isSelf" />
                 </div>
 
                 <!-- Date -->
