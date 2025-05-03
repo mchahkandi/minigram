@@ -7,6 +7,7 @@ import { LoaderCircle, X, Camera } from 'lucide-vue-next';
 import { useForm } from '@inertiajs/vue3';
 import { DialogTitle } from '@headlessui/vue';
 import { useGlobalStore } from '@/stores/GlobalStore';
+import { computed } from 'vue';
 
 const store = useGlobalStore()
 
@@ -19,7 +20,7 @@ const form = useForm({
     description: '',
     link: '',
     avatar: '',
-    type: 'channel'
+    type: computed(() => store.newRoomType)
 });
 
 const submit = () => {
@@ -36,7 +37,7 @@ const submit = () => {
     <SliderContainer :open="store.showNewRoomSlider">
         <div class="p-6">
             <div class="flex flex-row-reverse items-start justify-between">
-                <DialogTitle class="text-base font-semibold leading-6 text-gray-900">کانال جدید</DialogTitle>
+                <DialogTitle class="text-base font-semibold leading-6 text-gray-900">{{store.newRoomType == 'channel' ? 'کانال' : 'گروه'}} جدید</DialogTitle>
                 <div class="ml-3 flex h-7 items-center">
                     <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500" @click="handleClose">
                         <X class="h-6 w-6" aria-hidden="true" />

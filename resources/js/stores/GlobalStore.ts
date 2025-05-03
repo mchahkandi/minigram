@@ -8,7 +8,14 @@ export const useGlobalStore = defineStore('global', {
             showNewRoomSlider: ref(false),
             showContactsList: ref(false),
             showProfileSlider: ref(false),
+            newRoomType: ref(''),
 
         }
     },
+    actions: {
+        createRoom(type: string) {
+            this.newRoomType = type;
+            this.showNewRoomSlider = true;
+        }
+    }
 })
