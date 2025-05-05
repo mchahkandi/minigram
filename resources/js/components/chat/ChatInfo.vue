@@ -4,7 +4,11 @@ import { computed, ref } from 'vue';
 import { Phone, AtSign, Info, XIcon, Users } from 'lucide-vue-next'
 import Avatar from '@/components/Avatar.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+
+const page = usePage();
+
+const user = page.props.auth.user;
 
 const modalOpen = ref(false);
 
@@ -83,7 +87,8 @@ const data = computed(() => {
                 <Link href="#" class="text-blue-500 text-base font-semibold  w-full block p-3 rounded" >{{ conversation.type == 'chat' ? 'ارسال پیام' : 'نمایش' }}</Link>
             </div>
 
-            <div dir="rtl"  class="flex flex-col items-start">
+            <div v-if="conversation.model.type == 'group' ||
+             (conversation.model.type == 'channel' && conversation.model.owner_id == user.id)" dir="rtl"  class="flex flex-col items-start">
                 <div class="flex items-center mb-2 mr-2">
                     <Users class="text-gray-600"/>
                     <p class="mr-2 text-gray-500"> اعضا</p>
