@@ -31,7 +31,7 @@ class RoomController extends Controller
     public function show(Room $room)
     {
         return Inertia::render('rooms/Show', [
-            'room' => $room,
+            'room' => $room->load('members'),
             'messages' => $room->messages
         ]);
     }

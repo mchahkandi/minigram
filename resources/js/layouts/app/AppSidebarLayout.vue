@@ -103,7 +103,7 @@ const conversation = useConversationStore()
 
 const isCurrentConversation = (item) => {
     return conversation.model.id === item.route &&
-        conversation.type == item.type;
+        conversation.type == (item.type == 'chat' ? 'chat' : 'room');
 };
 
 </script>

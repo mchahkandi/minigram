@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Modal from '@/components/Modal.vue';
 import { computed, ref } from 'vue';
-import { Phone, AtSign, Info, XIcon } from 'lucide-vue-next'
+import { Phone, AtSign, Info, XIcon, Users } from 'lucide-vue-next'
 import Avatar from '@/components/Avatar.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
 import { Link } from '@inertiajs/vue3';
@@ -27,11 +27,10 @@ const data = computed(() => {
             videos: 5,
             documents: 2,
             others: 3
-        }
+        },
+        members: conversation.model.members ?? null,
     }
 });
-
-console.log(data);
 </script>
 
 <template>
@@ -74,14 +73,34 @@ console.log(data);
                         <p class="text-gray-500"> بیوگرافی </p>
 
                     </div>
-
                 </div>
+
+
+
             </div>
             <div class="border-t border-gray-300 my-4 w-full"></div>
             <div class="my-8">
                 <Link href="#" class="text-blue-500 text-base font-semibold  w-full block p-3 rounded" >{{ conversation.type == 'chat' ? 'ارسال پیام' : 'نمایش' }}</Link>
             </div>
+
+            <div dir="rtl"  class="flex flex-col items-start">
+                <div class="flex items-center mb-2 mr-2">
+                    <Users class="text-gray-600"/>
+                    <p class="mr-2 text-gray-500"> اعضا</p>
+                </div>
+                <div class="w-full max-h-40 overflow-y-auto">
+                    <div v-for="member in data.members" :key="member.id" class="flex items-center p-2 hover:bg-gray-100 rounded">
+                        <Avatar :fullName="member.name" :avatarUrl="member.avatar" class="size-8 text-xs" />
+                        <div class="mr-3">
+                            <h3 class="text-sm text-gray-800">{{ member.name }}</h3>
+                            <p dir="rtl" class="text-xs -mt-1 text-gray-500">{{ member.last_seen  }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </Modal>
 </template>
 
