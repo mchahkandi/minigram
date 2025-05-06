@@ -19,7 +19,7 @@
         </div>
 
         <div v-if="conversation.isSearching" class="flex items-center relative">
-            <button @click="conversation.isSearching = false" class="absolute left-3 text-gray-500">
+            <button @click="conversation.handleCloseSearch()" class="absolute left-3 text-gray-500">
                 <X />
             </button>
 
@@ -119,9 +119,6 @@ import { router } from '@inertiajs/vue3';
 
 const conversation = useConversationStore();
 
-console.log(conversation);
-
-
 const deleteModalOpen = ref(false);
 
 function openDeleteModal() {
@@ -133,6 +130,8 @@ const deleteChat = ( () => {
 
     router.delete(route(rt,conversation.model.id));
 })
+
+console.log(conversation);
 
 const goBack = () => {
     console.log("Going back");

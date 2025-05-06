@@ -38,7 +38,7 @@ export const useConversationStore = defineStore('conversation', {
         async handleSearch() {
             if (this.searchQuery.length > 3) {
                 try {
-                    const response = await axios.get(route('chats.messages.search', this.model.id), {
+                    const response = await axios.get(route(this.model.type == 'chat' ? 'chats.messages.search' : 'rooms.messages.search', this.model.id), {
                         params: { content: this.searchQuery }
                     });
                     this.searchResults = response.data;
@@ -47,6 +47,13 @@ export const useConversationStore = defineStore('conversation', {
                     this.searchResults = [];
                 }
             }
+        },
+        handleCloseSearch() {
+            this.isSearching = false,
+                this.searchQuery = '',
+                this.searchResults = [],
+                this.currentSearchIndex = -1,
+                this.scrollToMessageId = null
         },
         nextSearchResult() {
             if (this.searchResults.length === 0) return;

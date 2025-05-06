@@ -26,11 +26,4 @@ class Message extends Model
     {
         return $this->hasMany(Attachment::class);
     }
-
-    public function search($query)
-    {
-        return $this->where('content', 'LIKE', '%' . $query . '%')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
 }

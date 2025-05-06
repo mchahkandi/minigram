@@ -59,7 +59,9 @@ class RoomMessageController extends Controller
             'content' => 'required|string|max:500',
         ]);
 
-        $res = $room->messages()->search($data['content']);
+        $res = $room->messages()
+            ->where('content', 'LIKE', '%' . $data['content'] . '%')
+            ->get();
 
         return response()->json($res);
     }
