@@ -50,6 +50,12 @@
                                             <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold ']">{{ item.title }}</h2>
                                             <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500']">{{ item.last_message }}</p>
                                         </div>
+                                        <span
+                                            v-if="item.unread_messages > 0"
+                                            class="text-xs size-6 text-center font-medium text-white bg-green-500 rounded-full p-1 ml-auto self-center"
+                                        >
+                                            {{ item.unread_messages > 9 ? '9+' : item.unread_messages }}
+                                        </span>
                                     </Link>
                                 </li>
                             </ul>

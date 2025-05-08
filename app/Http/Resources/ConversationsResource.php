@@ -35,7 +35,13 @@ class ConversationsResource extends JsonResource
             'avatar' => $user ? $user->avatar : $this->avatar,
             'route' => $user? $user->id : $this->id,
             'type' => $type,
-            'last_message' => $this->messages[0]?->content ?? ''
+            'last_message' => $this->messages[0]?->content ?? '',
+            'unread_messages' => $this->messages()
+                ->where('user_id', '!=', Auth::id())
+                ->whereDoesntHave('seen', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->count()
         ];
     }
 }

@@ -26,4 +26,24 @@ class Message extends Model
     {
         return $this->hasMany(Attachment::class);
     }
+
+    public function seen() : HasMany
+    {
+        return $this->hasMany(Seen::class);
+    }
+
+    public function markAsSeen()
+    {
+        $this->seen()->updateOrCreate([
+            'user_id' => auth()->id(),
+
+        ]);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_read' => 'boolean',
+        ];
+    }
 }
