@@ -44,7 +44,7 @@ onMounted(() => {
         <ul role="list" class="flex-1  overflow-y-auto mx-2">
             <li v-for="person in contacts" :key="person.id">
                     <Link
-                        :href="route( 'chats.show',{id: person.id})"
+                        :href="route( 'chats.show',{id: person.contact_id})"
                         class="w-full group flex items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50">
                         <div class="flex gap-x-3">
                             <Avatar :fullName="person.name" :avatarUrl="person.avatar"/>

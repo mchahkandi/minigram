@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Static sidebar for desktop -->
-        <div class="md:fixed md:inset-y-0 md:z-50 md:flex md:w-80 md:flex-col lg:w-96">
+        <div class="md:fixed md:inset-y-0 md:z-30 md:flex md:w-80 md:flex-col lg:w-96">
             <!-- Sidebar component, swap this element with another sidebar if you like -->
             <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
                 <div class="flex h-16 shrink-0 items-center gap-2">

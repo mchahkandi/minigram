@@ -25,7 +25,7 @@ class ChatMessageController extends Controller
             'reply_id' => $request->input('reply_id'),
         ]);
 
-        if ($request->has('files')) {
+        if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
 
                 $name = strtolower($chat->getTable());
@@ -76,5 +76,13 @@ class ChatMessageController extends Controller
             ->get();
 
         return response()->json($res);
+    }
+
+    public function seen(int $user_id, Message $message)
+    {
+        $message->markAsSeen();
+
+        return response()->json(['messsage' => 'ok']);
+
     }
 }

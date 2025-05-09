@@ -116,11 +116,13 @@ class User extends Authenticatable
         return ' آخرین بازدید ' . ($date ?? 'به تازگی');
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    public function getNameAttribute($value)
+    {
+        $contact = Auth::user()->contacts()->where('contact_id', $this->id)->first();
+
+        return $contact?->name ?? $value;
+    }
+
 
     protected function casts(): array
     {

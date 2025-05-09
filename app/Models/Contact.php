@@ -13,6 +13,6 @@ class Contact extends Model
         'contact_id',
     ];
     public function user() :BelongsTo {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'contact_id');
     }
 }

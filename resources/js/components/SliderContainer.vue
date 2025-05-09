@@ -16,7 +16,7 @@ const props = defineProps<{
 
 <template>
     <TransitionRoot as="template" :show="props.open">
-        <Dialog as="div" class="relative z-50 w-screen">
+        <Dialog as="div" class="relative z-40 w-screen">
             <div class="fixed inset-0" />
 
             <div class="fixed inset-0 overflow-hidden">

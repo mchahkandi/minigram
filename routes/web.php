@@ -21,11 +21,12 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('contacts', [ContactController::class, 'store'])->name('contacts.store');
 
-    Route::get('chats/{id?}', [ChatController::class, 'show'])->name('chats.show');
+    Route::get('chats/{user_id?}', [ChatController::class, 'show'])->name('chats.show');
     Route::delete('chats/{user_id}', [ChatController::class, 'destroy'])->name('chats.destroy');
     Route::post('chats/{user_id}/messages', [ChatMessageController::class, 'store'])->name('messages.store');
     Route::delete('messages/{message}', [ChatMessageController::class, 'destroy'])->name('messages.destroy');
     Route::get('chat/{user_id}/messages/search', [ChatMessageController::class, 'search'])->name('chats.messages.search');
+    Route::post('chat/{user_id}/messages/{message}/seen', [ChatMessageController::class, 'seen'])->name('chats.messages.seen');
 
 
     Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
@@ -34,6 +35,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::post('rooms/{room}/messages', [RoomMessageController::class, 'store'])->name('rooms.messages.store');
     Route::get('rooms/{room}/messages/search', [RoomMessageController::class, 'search'])->name('rooms.messages.search');
+    Route::post('rooms/{room}/messages/{message}/seen', [RoomMessageController::class, 'seen'])->name('rooms.messages.seen');
 
 
 });

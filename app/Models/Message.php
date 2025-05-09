@@ -40,6 +40,11 @@ class Message extends Model
         ]);
     }
 
+    public function getIsReadAttribute($value) : bool
+    {
+        return $this->seen()->where('user_id', auth()->id())->exists();
+    }
+
     protected function casts(): array
     {
         return [

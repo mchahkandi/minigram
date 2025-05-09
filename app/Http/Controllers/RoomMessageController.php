@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ChatMessageSent;
 use App\Events\RoomMessageSent;
-use App\Models\Chat;
+use App\Models\Message;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +31,7 @@ class RoomMessageController extends Controller
             'reply_id' => $request->input('reply_id'),
         ]);
 
-        if ($request->has('files')) {
+        if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
 
                 $name = strtolower($room->getTable());
@@ -64,5 +63,12 @@ class RoomMessageController extends Controller
             ->get();
 
         return response()->json($res);
+    }
+
+    public function seen(Room $room, Message $message)
+    {
+        $message->markAsSeen();
+
+        return response()->json(['messsage' => 'ok']);
     }
 }

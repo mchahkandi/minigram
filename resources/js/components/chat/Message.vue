@@ -3,10 +3,11 @@ import { computed, ref, onMounted } from 'vue'
 import { usePage, router } from '@inertiajs/vue3'
 import MessageMenu from '@/components/chat/MessageMenu.vue';
 import Button from '@/components/Button.vue';
-import { LoaderCircle } from 'lucide-vue-next';
 import Modal from '@/components/Modal.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
 import Attachments from '@/components/chat/Attachments.vue';
+import { useIntersectionObserver } from '@vueuse/core'
+import { shallowRef, useTemplateRef } from 'vue'
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -18,6 +19,7 @@ const props = defineProps<{
         content: string;
         created_at?: string;
         attachments?: object;
+        is_read?: boolean;
     };
 }>();
 
@@ -60,10 +62,24 @@ onMounted(() => {
     document.addEventListener('click', handleCloseContextMenu);
 });
 
+const target = useTemplateRef<HTMLDivElement>('target')
+const targetIsVisible = shallowRef(false)
+
+const { isActive } = useIntersectionObserver(
+    target,
+    ([entry], observerElement) => {
+        targetIsVisible.value = entry?.isIntersecting || false
+    },
+)
+
+if (isActive && props.message.is_read == false){
+    conversation.markAsSeen(props.message.id)
+}
+
 </script>
 
 <template>
-    <div class="select-none" >
+    <div ref="target" class="select-none" >
         <div class="xs:mb-6 md:mb-5 flex" :class="isSelf ? 'justify-end' : 'justify-start'">
 
             <div class="flex items-end">
