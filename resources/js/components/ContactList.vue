@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
 import { DialogTitle, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { EllipsisVerticalIcon, X } from 'lucide-vue-next';
+import { EllipsisVerticalIcon, X, Check, UserPlus } from 'lucide-vue-next';
 import SliderContainer from '@/components/SliderContainer.vue';
 import Create from '@/pages/contacts/Create.vue';
 import { useGlobalStore } from '@/stores/GlobalStore';
@@ -10,75 +9,131 @@ import { Link, router } from '@inertiajs/vue3';
 import axios from 'axios';
 import Button from '@/components/Button.vue';
 import Avatar from '@/components/Avatar.vue';
+
 const store = useGlobalStore()
+const contacts = ref({});
+const selectedContacts = ref([]);
+const isSelectMode = ref(false);
 
-const contacts = ref(null);
+const fetchContacts = () => {
+    axios.get(route('contacts.index')).then((res) => {
+        contacts.value = Object.values(res.data);
+    })
+}
 
-    const fetchContacts = () => {
-        axios.get(route('contacts.index')).then((res) => {
-            contacts.value = res.data;
-        })
+const toggleContactSelection = (contactId: number) => {
+    const index = selectedContacts.value.indexOf(contactId);
+    if (index === -1) {
+        selectedContacts.value.push(contactId);
+    } else {
+        selectedContacts.value.splice(index, 1);
     }
+}
+
+const toggleSelectMode = () => {
+    isSelectMode.value = !isSelectMode.value;
+    if (!isSelectMode.value) {
+        selectedContacts.value = [];
+    }
+}
+
+const deleteContacts = () => {
+
+    for (const [key, value] of Object.entries(selectedContacts.value)) {
+        axios.delete(route('contacts.destroy', value))
+            .then(response => {
+                contacts.value.splice(key);
+
+                isSelectMode.value = false;
+                selectedContacts.value = [];
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+}
 
 onMounted(() => {
     fetchContacts();
 })
-
-
 </script>
 
 <template>
     <SliderContainer :open="store.showContactsList">
         <div class="p-6">
             <div class="flex flex-row-reverse items-start justify-between">
-                <DialogTitle class="text-base font-semibold leading-6 text-gray-900">مخاطبین</DialogTitle>
-                <div class="ml-3 flex h-7 items-center">
-                    <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500" @click="store.showContactsList = false">
+                <DialogTitle class="text-base font-semibold leading-6 text-gray-900">
+                    مخاطبین
+                    <span v-if="isSelectMode" class="text-sm text-gray-500"> ({{ selectedContacts.length }} انتخاب شده) </span>
+                </DialogTitle>
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500"
+                        @click="store.showContactsList = false"
+                    >
                         <span class="sr-only">Close panel</span>
                         <X class="h-6 w-6" aria-hidden="true" />
                     </button>
                 </div>
             </div>
         </div>
+        <div class="flex w-full flex-row-reverse justify-between px-4">
+            <button v-if="!isSelectMode" @click="toggleSelectMode" class="rounded-md p-2 text-blue-600 hover:bg-blue-50" title="Select contacts">
+                ویرایش
+            </button>
 
-        <ul role="list" class="flex-1  overflow-y-auto mx-2">
+            <button v-if="isSelectMode" @click="toggleSelectMode" class="rounded-md p-2 text-gray-500 hover:bg-gray-100" title="Cancel selection">
+                لغو
+            </button>
+
+            <button
+                v-if="isSelectMode"
+                @click.prevent="deleteContacts"
+                :disabled="selectedContacts.length === 0"
+                class="rounded-md p-2 text-blue-600 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+                حذف انتخاب شده‌ها
+            </button>
+        </div>
+
+        <ul role="list" class="mx-2 flex-1 overflow-y-auto">
             <li v-for="person in contacts" :key="person.id">
-                    <Link
-                        :href="route( 'chats.show',{id: person.contact_id})"
-                        class="w-full group flex items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50">
-                        <div class="flex gap-x-3">
-                            <Avatar :fullName="person.name" :avatarUrl="person.avatar"/>
-                            <div class="flex flex-col justify-between">
-                                <h2 class="text-gray-900 text-base font-bold">{{ person.name }}</h2>
-                                <p class="text-gray-500','truncate p-1 text-gray-500"> {{person.user.last_seen}} </p>
-                            </div>
-                        </div>
-                        <Menu as="div" class="relative ml-2 inline-block flex-shrink-0 text-left">
-                            <MenuButton class="group relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                <span class="sr-only">Open options menu</span>
-                                <span class="flex h-full w-full items-center justify-center rounded-full">
-                                                            <EllipsisVerticalIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                                        </span>
-                            </MenuButton>
-                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                <MenuItems class="absolute right-9 top-0 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <div class="py-1">
-                                        <MenuItem v-slot="{ active }">
-                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm text-right']">حذف</a>
-                                        </MenuItem>
-                                    </div>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
-                    </Link>
+                <div
+                    class="group flex w-full items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50"
+                    :class="{
+                        'bg-blue-50': selectedContacts.includes(person.id),
+                        'cursor-pointer': isSelectMode,
+                    }"
+                    @click="isSelectMode ? toggleContactSelection(person.id) : null"
+                >
+                    <div class="flex items-center gap-x-3">
+                        <Avatar :fullName="person.name" :avatarUrl="person.avatar" />
 
+                        <div class="flex flex-col justify-between">
+                            <h2 class="text-base font-bold text-gray-900">{{ person.name }}</h2>
+                            <p class="truncate p-1 text-gray-500">{{ person.user.last_seen }}</p>
+                        </div>
+                    </div>
+
+                    <div v-if="isSelectMode" class="flex-shrink-0">
+                        <div
+                            class="flex h-5 w-5 items-center justify-center rounded border border-gray-300"
+                            :class="{
+                                'border-blue-600 bg-blue-600': selectedContacts.includes(person.id),
+                            }"
+                        >
+                            <Check v-if="selectedContacts.includes(person.id)" class="h-4 w-4 text-white" />
+                        </div>
+                    </div>
+                </div>
             </li>
         </ul>
-        <Create/>
-
+        <Create />
     </SliderContainer>
 </template>
 
 <style scoped>
-
+/* Add any custom styles here */
 </style>

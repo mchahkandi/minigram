@@ -20,6 +20,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
 
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('contacts', [ContactController::class, 'store'])->name('contacts.store');
+    Route::delete('contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');
 
     Route::get('chats/{user_id?}', [ChatController::class, 'show'])->name('chats.show');
     Route::delete('chats/{user_id}', [ChatController::class, 'destroy'])->name('chats.destroy');
