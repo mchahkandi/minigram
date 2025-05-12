@@ -101,12 +101,11 @@ onMounted(() => {
         <ul role="list" class="mx-2 flex-1 overflow-y-auto">
             <li v-for="person in contacts" :key="person.id">
                 <div
-                    class="group flex w-full items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50"
+                    class="group flex w-full items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50 cursor-pointer"
                     :class="{
                         'bg-blue-50': selectedContacts.includes(person.id),
-                        'cursor-pointer': isSelectMode,
                     }"
-                    @click="isSelectMode ? toggleContactSelection(person.id) : null"
+                    @click="isSelectMode ? toggleContactSelection(person.id) : router.get(route('chats.show',{id: person.contact_id}))"
                 >
                     <div class="flex items-center gap-x-3">
                         <Avatar :fullName="person.name" :avatarUrl="person.avatar" />
