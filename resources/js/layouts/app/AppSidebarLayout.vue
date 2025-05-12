@@ -80,6 +80,7 @@
         <CreateRoom/>
         <ContactList/>
         <Profile/>
+        <AddUsers/>
         <main class="hidden md:flex lg:pl-96">
             <slot />
         </main>
@@ -98,6 +99,7 @@ import { Megaphone, MenuIcon, CircleUser, User, Users } from 'lucide-vue-next';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { useGlobalStore } from '@/stores/GlobalStore.js';
 import Profile from '@/components/Profile.vue';
+import AddUsers from '@/components/AddUsers.vue';
 
 const globalStore = useGlobalStore()
 

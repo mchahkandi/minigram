@@ -53,4 +53,16 @@ class RoomController extends Controller
 
         return redirect()->route('dashboard');
     }
+
+    public function addUsers(Room $room, Request $request)
+    {
+        $validated = $request->validate([
+            'members' => 'required|array',
+            'members.*' => 'exists:users,id',
+        ]);
+
+        $room->members()->syncWithoutDetaching($validated['members']);
+
+        return response()->json(['message' => 'success'], 200);
+    }
 }

@@ -37,6 +37,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('rooms/{room}/messages', [RoomMessageController::class, 'store'])->name('rooms.messages.store');
     Route::get('rooms/{room}/messages/search', [RoomMessageController::class, 'search'])->name('rooms.messages.search');
     Route::post('rooms/{room}/messages/{message}/seen', [RoomMessageController::class, 'seen'])->name('rooms.messages.seen');
+    Route::post('rooms/{room}/addusers', [RoomController::class, 'addUsers'])->name('rooms.addusers');
 
 
 });
