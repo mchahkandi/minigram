@@ -37,7 +37,7 @@ function logOut () {
                     <button @click.prevent="logoutModalOpen = true" type="button" class="rounded-md bg-white text-red-400 hover:text-red-500">
                         <LogOut class="size-6"/>
                     </button>
-                    <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500">
+                    <button @click.prevent="store.showEditProfileSlider = true" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-blue-500">
                         <Pencil class="size-6"/>
                     </button>
                     <DialogTitle class="mr-4 text-base font-semibold leading-6 text-gray-900">پروفایل</DialogTitle>

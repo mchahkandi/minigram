@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -121,6 +122,11 @@ class User extends Authenticatable
         $contact = Auth::user()->contacts()->where('contact_id', $this->id)->first();
 
         return $contact?->name ?? $value;
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ? asset(Storage::url($value)) : null;
     }
 
 

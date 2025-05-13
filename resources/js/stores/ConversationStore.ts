@@ -27,8 +27,7 @@ export const useConversationStore = defineStore('conversation', {
     actions: {
         async markAsSeen(message_id) {
                 try {
-                    const response = await axios.post(route(this.model.type == 'chat' ? 'chats.messages.seen' : 'rooms.messages.seen', [this.model.id, message_id]));
-                    console.log(response);
+                    const response = await axios.post(route(this.type == 'chat' ? 'chats.messages.seen' : 'rooms.messages.seen', [this.model.id, message_id]));
                     this.messages[message_id].is_read = true;
                 } catch (error) {
                     console.error('Error:', error);

@@ -10,6 +10,7 @@ export const useGlobalStore = defineStore('global', {
             showProfileSlider: ref(false),
             newRoomType: ref(''),
             showAddUsers: ref(false),
+            showEditProfileSlider: ref(false),
 
         }
     },
