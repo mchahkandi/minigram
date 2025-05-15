@@ -8,6 +8,7 @@ import { useConversationStore } from '@/stores/ConversationStore';
 import Attachments from '@/components/chat/Attachments.vue';
 import { useIntersectionObserver } from '@vueuse/core'
 import { shallowRef, useTemplateRef } from 'vue'
+import { Check, CheckCheck } from 'lucide-vue-next';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -72,41 +73,60 @@ const { isActive } = useIntersectionObserver(
     },
 )
 
-if (isActive && props.message.is_read == false){
+if (!isSelf.value && isActive && props.message.is_read == false){
     conversation.markAsSeen(props.message.id)
+}
+
+function formatPersianTime(timestamp) {
+    const date = new Date(timestamp);
+
+    const formatter = new Intl.DateTimeFormat('fa-IR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    let formatted = formatter.format(date);
+
+    formatted = formatted.replace('AM', 'قبل‌ازظهر').replace('PM', 'بعدازظهر');
+
+    return formatted;
 }
 
 </script>
 
 <template>
     <div ref="target" class="select-none" >
-        <div class="xs:mb-6 md:mb-5 flex" :class="isSelf ? 'justify-end' : 'justify-start'">
+        <div class="xs:mb-6 md:mb-1 flex" :class="isSelf ? 'justify-end' : 'justify-start'">
 
             <div class="flex items-end">
                 <div
                     @click="handleCloseContextMenu"
                     v-click-outside="contextConfig"
                     @contextmenu.prevent="handleContextMenu"
-                    class="group max-w-[31.25rem] p-4 rounded-b transition duration-500"
+                    class="group max-w-[31.25rem] px-4 pt-4 rounded-b transition duration-500"
                     :class="{
                         'rounded-tl rounded-xl ml-4 order-3 bg-gray-50': isSelf,
                         'rounded-tr bg-white dark:bg-gray-600': !isSelf
                     }"
                 >
-                    <p class="body-2 outline-none text-black opacity-60 dark:text-white dark:opacity-70">
+                    <p class="body-2 outline-none text-black opacity-60">
                         {{ props.message.content }}
                     </p>
 
 
                      <Attachments v-if="props.message.attachments?.length > 0" :message="props.message" :self="isSelf" />
-                </div>
 
-                <!-- Date -->
-<!--                <div :class="isSelf ? 'ml-2 order-1' : 'mr-4 order-1'">-->
-<!--                    <p class="body-1 text-color whitespace-pre">-->
-<!--                        {{ props.message.created_at }}-->
-<!--                    </p>-->
-<!--                </div>-->
+                    <div dir="rtl" class="py-1 justify-self-end">
+                        <p class="flex body-1 text-xs text-gray-500 text-color whitespace-pre">
+                            <div v-if="isSelf" >
+                            <CheckCheck v-if="props.message.is_read" class="size-4"/>
+                            <Check v-else class="size-4" />
+                            </div>
+                            {{ formatPersianTime(props.message.created_at) }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
         <MessageMenu

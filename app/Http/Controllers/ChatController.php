@@ -25,7 +25,7 @@ class ChatController extends Controller
 
         $chat = Chat::findChat(auth()->id(), $user_id)->first();
 
-        $messages = $chat?->messages()?->with('attachments')->orderBy('created_at', 'asc')->get();
+        $messages = $chat?->messages()?->with('attachments')->orderBy('created_at', 'asc')->get()->keyBy('id');
 
         return Inertia::render('chats/Show',[
             'user' => $user,
