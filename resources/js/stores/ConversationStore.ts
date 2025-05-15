@@ -7,7 +7,7 @@ export const useConversationStore = defineStore('conversation', {
         type: '',
         model: {},
         isReplying: false,
-        replyId: null,
+        replyMessage: null,
         messages: [],
         isSearching: false,
         searchQuery: '',
@@ -33,11 +33,9 @@ export const useConversationStore = defineStore('conversation', {
                     console.error('Error:', error);
                 }
         },
-        handleReply(id) {
-            console.log(id);
-            this.replyId = id;
+        handleReply(message) {
+            this.replyMessage = message;
             this.isReplying = true;
-            console.log(this.replyId);
         },
         handleCloseReply() {
             this.replyId = null;

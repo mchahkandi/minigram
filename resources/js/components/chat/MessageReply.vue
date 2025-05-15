@@ -2,6 +2,8 @@
 
 import { defineEmits, ref } from 'vue';
 import { X } from 'lucide-vue-next';
+import { useConversationStore } from '@/stores/ConversationStore';
+import { shorten } from '@/utils';
 
 const props = defineProps({
     show: {
@@ -16,6 +18,8 @@ const emits = defineEmits<{
 const handleCloseReply = () => {
     emits('closeReply');
 }
+
+const conversation = useConversationStore();
 
 </script>
 
@@ -41,14 +45,14 @@ const handleCloseReply = () => {
                     'dark:opacity-70',
                   ]"
                 >
-                    asghar
+                    {{ conversation?.replyMessage?.user?.name }}
                 </p>
 
                 <!--content-->
                 <p
                     class="body-2 text-black opacity-50 dark:text-white dark:opacity-70"
                 >
-                    aloooo....
+                   {{ shorten(conversation.replyMessage.content) }}
                 </p>
 
             </div>

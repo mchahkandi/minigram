@@ -32,7 +32,7 @@ class RoomController extends Controller
     {
         return Inertia::render('rooms/Show', [
             'room' => $room->load('members'),
-            'messages' => $room->messages->keyBy('id')
+            'messages' => $room->messages->keyBy('id')->load(['user','replied']),
         ]);
     }
 

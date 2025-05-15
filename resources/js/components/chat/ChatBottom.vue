@@ -114,7 +114,7 @@ const conversation = useConversationStore();
 
 const form = useForm({
     content: '',
-    reply_id: computed(() => conversation.replyId),
+    reply_id: computed(() => conversation.replyMessage?.id),
     files: null,
 });
 

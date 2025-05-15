@@ -9,6 +9,7 @@ import Attachments from '@/components/chat/Attachments.vue';
 import { useIntersectionObserver } from '@vueuse/core'
 import { shallowRef, useTemplateRef } from 'vue'
 import { Check, CheckCheck } from 'lucide-vue-next';
+import ReplyPreview from '@/components/chat/ReplyPreview.vue';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -110,6 +111,12 @@ function formatPersianTime(timestamp) {
                         'rounded-tr bg-white dark:bg-gray-600': !isSelf
                     }"
                 >
+                    <ReplyPreview
+                        v-if="props.message.reply_id"
+                        :message="props.message"
+                        class="mb-5 px-3"
+                    />
+
                     <p class="body-2 outline-none text-black opacity-60">
                         {{ props.message.content }}
                     </p>

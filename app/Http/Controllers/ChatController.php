@@ -30,7 +30,7 @@ class ChatController extends Controller
         return Inertia::render('chats/Show',[
             'user' => $user,
             'chat' => $chat,
-            'messages' => $messages,
+            'messages' => $messages->load(['user','replied']),
         ]);
 
     }
