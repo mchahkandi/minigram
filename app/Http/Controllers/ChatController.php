@@ -19,10 +19,6 @@ class ChatController extends Controller
 
         $user = User::find($user_id)->toArray();
 
-        if (auth()->user()->contacts()->where('contact_id', $user_id)->exists()) {
-            $user['name'] = auth()->user()->contacts()->where('contact_id', $user_id)->first()->name;
-        }
-
         $chat = Chat::findChat(auth()->id(), $user_id)->first();
 
         $messages = $chat?->messages()?->with('attachments')->orderBy('created_at', 'asc')->get()->keyBy('id');
@@ -30,7 +26,7 @@ class ChatController extends Controller
         return Inertia::render('chats/Show',[
             'user' => $user,
             'chat' => $chat,
-            'messages' => $messages->load(['user','replied']),
+            'messages' => $messages?->load(['user','replied']),
         ]);
 
     }

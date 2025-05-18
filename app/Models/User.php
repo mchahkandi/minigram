@@ -87,7 +87,7 @@ class User extends Authenticatable
 
     public function rooms(): BelongsToMany
     {
-        return $this->belongsToMany(Room::class,'members', 'user_id', 'room_id');
+        return $this->belongsToMany(Room::class,'members', 'user_id', 'room_id')->using(Member::class);
     }
 
     public function createNewChat(int $user_id)

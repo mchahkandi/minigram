@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Static sidebar for desktop -->
-        <div class="md:fixed md:inset-y-0 md:z-30 md:flex md:w-80 md:flex-col lg:w-96">
+        <div v-if="!isMobile || isDashboard" class=" md:fixed md:inset-y-0 md:z-30 md:flex md:w-80 md:flex-col lg:w-96">
             <!-- Sidebar component, swap this element with another sidebar if you like -->
             <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
                 <div class="flex h-16 shrink-0 items-center gap-2">
@@ -48,7 +48,7 @@
                                         <Avatar :fullName="item.title" :avatarUrl="item.avatar"/>
                                         <div class="flex flex-col justify-between">
                                             <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold ']">{{ item.title }}</h2>
-                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500']">{{ item.last_message }}</p>
+                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500']">{{ shorten(item.last_message) }}</p>
                                         </div>
                                         <span
                                             v-if="item.unread_messages > 0"
@@ -66,23 +66,12 @@
             </div>
         </div>
 
-        <!--        <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">-->
-        <!--            <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">-->
-        <!--                <span class="sr-only">Open sidebar</span>-->
-        <!--                <Bars3Icon class="h-6 w-6" aria-hidden="true" />-->
-        <!--            </button>-->
-        <!--            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>-->
-        <!--            <a href="#">-->
-        <!--                <span class="sr-only">Your profile</span>-->
-        <!--                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
-        <!--            </a>-->
-        <!--        </div>-->
         <CreateRoom/>
         <ContactList/>
         <Profile/>
         <EditProfile/>
         <AddUsers/>
-        <main class="hidden md:flex lg:pl-96">
+        <main :class="[isMobile && isDashboard ? 'hidden' : '']" class=" md:flex md:pl-80 lg:pl-96">
             <slot />
         </main>
     </div>
@@ -102,18 +91,32 @@ import { useGlobalStore } from '@/stores/GlobalStore.js';
 import Profile from '@/components/Profile.vue';
 import AddUsers from '@/components/AddUsers.vue';
 import EditProfile from '@/components/EditProfile.vue';
+import { shorten } from '../../utils';
+import { onMounted, reactive, ref } from 'vue';
 
 const globalStore = useGlobalStore()
 
 const page = usePage();
 
-const conversations = page.props.conversations.data;
+const conversations = reactive(page.props.conversations.data);
 
 const conversation = useConversationStore()
 
 const isCurrentConversation = (item) => {
-    return conversation.model.id === item.route &&
+    return !isDashboard && conversation.model.id === item.route &&
         conversation.type == (item.type == 'chat' ? 'chat' : 'room');
 };
+
+const isMobile = ref(false);
+const isDashboard =  route().current() == 'dashboard';
+
+
+onMounted(() => {
+    isMobile.value = window.innerWidth < 768;
+
+    window.addEventListener('resize', () => {
+        isMobile.value = window.innerWidth < 768;
+    });
+});
 
 </script>

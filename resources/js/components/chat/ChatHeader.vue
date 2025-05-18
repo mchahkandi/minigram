@@ -1,9 +1,9 @@
 <template>
     <div class="z-20 w-full bg-white shadow-md p-3 mb-4 flex items-center justify-between">
         <div class="flex items-center ml-2 gap-4">
-            <button class="md:hidden text-gray-600 hover:text-blue-500" @click="goBack">
+            <Link :href="route('dashboard')" class="md:hidden text-gray-600 hover:text-blue-500">
                 <ArrowLeft class="size-6 text-gray-700"/>
-            </button>
+            </Link>
             <ChatInfo>
                 <template #trigger>
                     <div class="hover:cursor-pointer flex gap-4">
@@ -79,9 +79,13 @@
                                     جستجو <Search />
                                 </button>
                             </MenuItem>
+                            <MenuItem v-if="conversation.type == 'room'" v-slot="{ close, active }">
+                                <button @click.prevent="(store.showAddUsers = true); close()" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'w-full flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']"> افزودن اعضا <Users/></button>
+                            </MenuItem>
                             <MenuItem class="hover:text-red-500" v-slot="{ active }">
                                 <button @click.prevent="openDeleteModal" :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-red-500', 'w-full flex items-start justify-end gap-2 px-4 py-4 text-sm text-right']"> حذف گفتگو <Trash2/></button>
                             </MenuItem>
+
                         </div>
                     </MenuItems>
                 </transition>
@@ -107,17 +111,21 @@
 </template>
 
 <script setup>
-import { ArrowLeft, EllipsisVertical, Search, Trash2, X, ChevronUp, ChevronDown } from 'lucide-vue-next';
+import { ArrowLeft, EllipsisVertical, Search, Trash2, X, ChevronUp, ChevronDown, Users } from 'lucide-vue-next';
 import ChatInfo from '@/components/chat/ChatInfo.vue';
 import { useConversationStore } from '@/stores/ConversationStore.js';
+import { useGlobalStore } from '@/stores/GlobalStore.js';
+
 import Avatar from '@/components/Avatar.vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import Button from '@/components/Button.vue';
 import Modal from '@/components/Modal.vue';
 import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router, Link } from '@inertiajs/vue3';
 
 const conversation = useConversationStore();
+const store = useGlobalStore();
+
 
 const deleteModalOpen = ref(false);
 
@@ -130,8 +138,6 @@ const deleteChat = ( () => {
 
     router.delete(route(rt,conversation.model.id));
 })
-
-console.log(conversation);
 
 const goBack = () => {
     console.log("Going back");

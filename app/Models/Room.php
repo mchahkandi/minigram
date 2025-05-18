@@ -25,7 +25,7 @@ class Room extends Model
 
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'members', 'room_id', 'user_id');
+        return $this->belongsToMany(User::class, 'members', 'room_id', 'user_id')->using(Member::class);
     }
 
     public function messages() : MorphMany

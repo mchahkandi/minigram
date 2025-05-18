@@ -65,7 +65,6 @@ function scrollToMessage(messageId) {
 onMounted(() => {
     Echo.private(`chats.${props.chat?.id}`)
         .listen("ChatMessageSent", (response) => {
-            console.log(response);
             localMessages.value[response.message.id] = response.message;
         });
     scrollToBottom();
