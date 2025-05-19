@@ -6,6 +6,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import ChatLayout from '@/components/chat/ChatLayout.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
 import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps<{
     room?: object;
@@ -22,9 +23,9 @@ const page = usePage();
 
 const user = page.props.auth.user;
 
-const isOwner = ( () => {
-    return conversation.model.type == 'channel' && user.id != conversation.model.owner_id
-})
+const isOwner = computed(() => {
+    return conversation.model?.type === 'group' || user.id === conversation.model?.owner_id;
+});
 
 </script>
 
@@ -33,7 +34,7 @@ const isOwner = ( () => {
         <ChatLayout>
             <ChatHeader />
             <ChatMiddle :messages="messages" :chat="room" />
-            <ChatBottom v-if="!isOwner" />
+            <ChatBottom v-if="isOwner" />
         </ChatLayout>
     </AppLayout>
 </template>

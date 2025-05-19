@@ -25,7 +25,8 @@ const props = defineProps<{
     };
 }>();
 
-const isSelf = computed(() => user.value.id === props.message.user_id && conversation.type === 'chat');
+const isSelf = computed(() => user.value.id === props.message.user_id );
+const isChannel = computed( () => conversation.model?.type == 'channel')
 
 const showContextMenu = ref(false);
 const contextMenuX = ref(0);
@@ -74,7 +75,7 @@ const { isActive } = useIntersectionObserver(
     },
 )
 
-if (!isSelf.value && isActive && props.message.is_read == false){
+if (!isSelf.value && isActive.value && !props.message.is_read){
     conversation.markAsSeen(props.message.id)
 }
 
@@ -98,7 +99,7 @@ function formatPersianTime(timestamp) {
 
 <template>
     <div ref="target" class="select-none" >
-        <div class="xs:mb-6 md:mb-1 flex" :class="isSelf ? 'justify-end' : 'justify-start'">
+        <div class="xs:mb-6 md:mb-1 flex" :class="isSelf && !isChannel ? 'justify-end' : 'justify-start'">
 
             <div class="flex items-end">
                 <div
@@ -126,7 +127,7 @@ function formatPersianTime(timestamp) {
 
                     <div dir="rtl" class="py-1 justify-self-end">
                         <p class="flex body-1 text-xs text-gray-500 text-color whitespace-pre">
-                            <div v-if="isSelf" >
+                            <div v-if="isSelf && !isChannel" >
                             <CheckCheck v-if="props.message.is_read" class="size-4"/>
                             <Check v-else class="size-4" />
                             </div>

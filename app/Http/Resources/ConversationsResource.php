@@ -39,7 +39,7 @@ class ConversationsResource extends JsonResource
             'unread_messages' => $this->messages()
                 ->where('user_id', '!=', Auth::id())
                 ->whereDoesntHave('seen', function ($query) {
-                    $query->where('user_id', auth()->id());
+                    $query->where('user_id', Auth::id());
                 })
                 ->count()
         ];
