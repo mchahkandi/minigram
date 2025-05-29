@@ -119,7 +119,7 @@ class User extends Authenticatable
 
     public function getNameAttribute($value)
     {
-        $contact = Auth::user()->contacts()->where('contact_id', $this->id)->first();
+        $contact = Auth::user()?->contacts()?->where('contact_id', $this->id)?->first();
 
         return $contact?->name ?? $value;
     }

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('seens', function (Blueprint $table) {
-            $table->foreignId('message_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('message_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('seen_at')->useCurrent();
             $table->primary(['message_id', 'user_id']);
             $table->timestamps();
