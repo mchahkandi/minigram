@@ -37,7 +37,7 @@
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">
                         <li>
                             <ul role="list" class="-mx-2 overflow-hidden">
-                                <li v-for="item in conversations" :key="item.title">
+                                <li v-for="item in sortedConversations" :key="item.title">
                                     <Link
                                         :href="route(item.type == 'chat' ? 'chats.show' : 'rooms.show',{id: item.route})"
                                         :class="[
@@ -46,9 +46,11 @@
                                         ]"
                                     >
                                         <Avatar :fullName="item.title" :avatarUrl="item.avatar"/>
-                                        <div class="flex flex-col justify-between">
-                                            <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold ']">{{ item.title }}</h2>
-                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500']">{{ shorten(item.last_message) }}</p>
+                                        <div class="flex flex-col justify-between w-full">
+                                            <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold flex justify-between']">{{ item.title }}
+                                            <span :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500', 'text-xs font-thin']">{{ formatPersianDate(item.last_update) }}</span>
+                                            </h2>
+                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500 font-normal']">{{ shorten(item.last_message,33) }}</p>
                                         </div>
                                         <span
                                             v-if="item.unread_messages > 0"
@@ -93,6 +95,10 @@ import AddUsers from '@/components/AddUsers.vue';
 import EditProfile from '@/components/EditProfile.vue';
 import { shorten } from '../../utils';
 import { onMounted, reactive, ref } from 'vue';
+import moment from 'moment-jalaali';
+import { computed } from 'vue';
+
+
 
 const globalStore = useGlobalStore()
 
@@ -101,6 +107,10 @@ const page = usePage();
 const conversations = reactive(page.props.conversations.data);
 
 const conversation = useConversationStore()
+
+const sortedConversations = computed(() => {
+    return [...conversations].sort((a, b) => new Date(b.last_update).getTime() - new Date(a.last_update).getTime());
+});
 
 const isCurrentConversation = (item) => {
     return !isDashboard && conversation.model.id === item.route &&
@@ -118,5 +128,22 @@ onMounted(() => {
         isMobile.value = window.innerWidth < 768;
     });
 });
+
+function formatPersianDate(dateStr: string): string {
+    const inputDate = new Date(dateStr);
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    const weekdaysFa = ['یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+
+    if (inputDate >= oneWeekAgo && inputDate <= now) {
+        return weekdaysFa[inputDate.getDay()];
+    } else {
+        const m = moment(inputDate);
+        m.locale('fa');
+        return m.format('jD jMMMM');
+    }
+}
 
 </script>

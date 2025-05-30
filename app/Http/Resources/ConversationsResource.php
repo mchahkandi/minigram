@@ -36,6 +36,7 @@ class ConversationsResource extends JsonResource
             'route' => $user? $user->id : $this->id,
             'type' => $type,
             'last_message' => $this->messages[0]?->content ?? '',
+            'last_update' => $this->messages[0]?->created_at ?? '',
             'unread_messages' => $this->messages()
                 ->where('user_id', '!=', Auth::id())
                 ->whereDoesntHave('seen', function ($query) {
