@@ -50,7 +50,7 @@
                                             <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold flex justify-between']">{{ item.title }}
                                             <span :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500', 'text-xs font-thin']">{{ formatPersianDate(item.last_update) }}</span>
                                             </h2>
-                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','truncate p-1 text-gray-500 font-normal']">{{ shorten(item.last_message,33) }}</p>
+                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','p-1 text-gray-500 font-normal truncate']">{{ shorten(item.last_message,28) }}</p>
                                         </div>
                                         <span
                                             v-if="item.unread_messages > 0"

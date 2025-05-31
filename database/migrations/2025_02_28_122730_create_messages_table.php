@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->text('content');
             $table->foreignId('reply_id')->nullable()->constrained('messages');
-            $table->tinyInteger('is_read')->default(0);
             $table->timestamps();
         });
     }

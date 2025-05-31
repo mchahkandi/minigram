@@ -25,7 +25,7 @@ const props = defineProps<{
     };
 }>();
 
-const isSelf = computed(() => user.value.id === props.message.user_id );
+const isSelf = computed(() => user.value.id == props.message.user_id );
 const isChannel = computed( () => conversation.model?.type == 'channel')
 
 const showContextMenu = ref(false);
@@ -76,6 +76,7 @@ const { isActive } = useIntersectionObserver(
 )
 
 if (!isSelf.value && isActive.value && !props.message.is_read){
+    console.log(props.message.is_read);
     conversation.markAsSeen(props.message.id)
 }
 

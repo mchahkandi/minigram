@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Auth;
 
 
 class Message extends Model
@@ -18,6 +19,8 @@ class Message extends Model
         'reply_id',
         'is_read',
     ];
+
+    protected $appends = ['is_read'];
     public function messagable(): MorphTo
     {
         return $this->morphTo();
@@ -53,7 +56,10 @@ class Message extends Model
 
     public function getIsReadAttribute($value) : bool
     {
-        return $this->seen()->where('user_id', '!=', auth()->id())->exists();
+//        if($this->user_id == auth()->id()) {
+//            return true;
+//        }
+        return $this->seen()->where('user_id', Auth::id())->exists();
     }
 
     protected function casts(): array
