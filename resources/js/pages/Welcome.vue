@@ -4,7 +4,7 @@ import { route } from '../../../vendor/tightenco/ziggy';
 </script>
 
 <template>
-    <Head title="Minigram - پیام‌رسان سریع و امن">
+    <Head title="مینی‌گرام - پیام‌رسان سریع و امن">
 
     </Head>
 
@@ -18,14 +18,13 @@ import { route } from '../../../vendor/tightenco/ziggy';
                         <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
                         </svg>
-                        <span class="ml-2 text-xl font-bold text-primary">Minigram</span>
+                        <span class="mr-2 text-xl font-bold text-primary">مینی‌گرام</span>
                     </div>
                 </div>
                 <div class="hidden md:ml-6 md:flex md:flex-row-reverse md:items-center md:space-x-8">
                     <a href="#features" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">امکانات</a>
                     <a href="#security" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">امنیت</a>
                     <a href="#download" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">دانلود</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">تماس</a>
                 </div>
                 <div class="flex items-center">
                     <Link :href="route('register')" class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-opacity-90 transition">شروع کنید</Link>
@@ -62,10 +61,19 @@ import { route } from '../../../vendor/tightenco/ziggy';
                     </div>
                 </div>
                 <div class="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
-                    <div class="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
-                        <img class="w-full rounded-lg" src="https://via.placeholder.com/600x400/1976D2/ffffff?text=Minigram+App" alt="تصویر اپلیکیشن">
+                    <!-- Added padding and overflow-visible to prevent cropping -->
+                    <div class="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-[100%] transform scale-110 perspective-1000 overflow-visible">
+                        <!-- Added origin-left to rotate from the left edge -->
+                        <div class="w-full h-full rounded-lg transform transition-all duration-300 rotate-y-[-15deg] origin-left">
+                            <img
+                                class="w-full h-full rounded-lg object-cover"
+                                src="/assets/img/screenshot.png"
+                                alt="تصویر اپلیکیشن"
+                            />
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -95,9 +103,9 @@ import { route } from '../../../vendor/tightenco/ziggy';
                                     </svg>
                                 </div>
                                 <div class="mr-5 w-0 flex-1">
-                                    <h3 class="text-lg font-medium text-gray-900">رمزنگاری end-to-end</h3>
+                                    <h3 class="text-lg font-medium text-gray-900">فضای ایری</h3>
                                     <p class="mt-1 text-sm text-gray-500">
-                                        پیام‌های شما با استانداردهای نظامی رمزنگاری می‌شوند.
+                                        امکان ارسال عکس و فایل بدون محدودیت
                                     </p>
                                 </div>
                             </div>
@@ -133,9 +141,9 @@ import { route } from '../../../vendor/tightenco/ziggy';
                                     </svg>
                                 </div>
                                 <div class="mr-5 w-0 flex-1">
-                                    <h3 class="text-lg font-medium text-gray-900">پیام‌های خودتخریب</h3>
+                                    <h3 class="text-lg font-medium text-gray-900">رابط کاربری آشنا</h3>
                                     <p class="mt-1 text-sm text-gray-500">
-                                        پیام‌هایی که پس از خوانده شدن به طور خودکار پاک می‌شوند.
+                                        طراحی ساده و کاربرپسند مشابه دیگر پیام‌رسان‌ها.
                                     </p>
                                 </div>
                             </div>
@@ -152,9 +160,9 @@ import { route } from '../../../vendor/tightenco/ziggy';
                                     </svg>
                                 </div>
                                 <div class="mr-5 w-0 flex-1">
-                                    <h3 class="text-lg font-medium text-gray-900">تماس تصویری و صوتی</h3>
+                                    <h3 class="text-lg font-medium text-gray-900">ارتباط ایمن</h3>
                                     <p class="mt-1 text-sm text-gray-500">
-                                        تماس‌های با کیفیت با دوستان و خانواده.
+                                        تمامی جلسه‌ها و فعالیت‌ها به صورت رمزنگاری شده ذخیره می‌شوند.
                                     </p>
                                 </div>
                             </div>
@@ -207,15 +215,15 @@ import { route } from '../../../vendor/tightenco/ziggy';
     <section id="security" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-                <div class="mb-8 lg:mb-0">
-                    <img class="w-full rounded-lg shadow-xl" src="https://via.placeholder.com/600x400/0D47A1/ffffff?text=امنیت+اولویت+ماست" alt="تصویر امنیت">
+                <div class="mb-8 lg:mb-0 aspect-video w-full"> <!-- 16:9 ratio -->
+                    <img class="w-full h-full object-contain" src="/assets/img/screenshot2.png" alt="تصویر امنیت">
                 </div>
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
                         حریم خصوصی شما اولویت ماست
                     </h2>
                     <p class="mt-3 text-lg text-gray-500">
-                        ما به حق شما برای ارتباطات خصوصی اعتقاد داریم. به همین دلیل مینی‌گرام از رمزنگاری end-to-end برای تمام پیام‌ها، تماس‌ها و رسانه‌ها استفاده می‌کند.
+                        ما به حق شما برای ارتباطات خصوصی اعتقاد داریم. به همین دلیل مینی‌گرام از رمزنگاری برای تمام پیام‌ها و رسانه‌ها استفاده می‌کند.
                     </p>
                     <div class="mt-8">
                         <div class="flex items-start">
@@ -230,18 +238,7 @@ import { route } from '../../../vendor/tightenco/ziggy';
                                 </p>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-start">
-                            <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <div class="mr-3">
-                                <p class="text-base text-gray-700">
-                                    <strong>احراز هویت دو مرحله‌ای</strong> - لایه امنیتی اضافی برای حساب شما
-                                </p>
-                            </div>
-                        </div>
+
                         <div class="mt-4 flex items-start">
                             <div class="flex-shrink-0">
                                 <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,13 +258,13 @@ import { route } from '../../../vendor/tightenco/ziggy';
     </section>
 
     <!-- بخش دعوت به اقدام -->
-    <section class="py-16 bg-primary text-white">
+    <section id="download" class="py-16 bg-primary text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-extrabold sm:text-4xl">
                 آماده امتحان مینی‌گرام هستید؟
             </h2>
             <p class="mt-4 text-xl opacity-90">
-                به بیش از 500 میلیون کاربر در سراسر جهان بپیوندید که برای پیام‌رسانی سریع و امن به مینی‌گرام اعتماد دارند.
+                به کاربران در سراسر جهان بپیوندید که برای پیام‌رسانی سریع و امن به مینی‌گرام اعتماد دارند.
             </p>
             <div class="mt-8 flex justify-center">
                 <div class="inline-flex rounded-md shadow">

@@ -41,7 +41,7 @@ class ChatMessageController extends Controller
             }
         }
 
-        broadcast(new ChatMessageSent($message));
+        broadcast(new ChatMessageSent($message->load('attachments')));
 
         return back()->with(['message' => $message]);
     }

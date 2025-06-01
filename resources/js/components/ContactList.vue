@@ -10,7 +10,7 @@ import axios from 'axios';
 import Button from '@/components/Button.vue';
 import Avatar from '@/components/Avatar.vue';
 
-const store = useGlobalStore()
+const store = useGlobalStore();
 const contacts = ref({});
 const selectedContacts = ref([]);
 const isSelectMode = ref(false);
@@ -18,8 +18,8 @@ const isSelectMode = ref(false);
 const fetchContacts = () => {
     axios.get(route('contacts.index')).then((res) => {
         contacts.value = Object.values(res.data);
-    })
-}
+    });
+};
 
 const toggleContactSelection = (contactId: number) => {
     const index = selectedContacts.value.indexOf(contactId);
@@ -28,35 +28,34 @@ const toggleContactSelection = (contactId: number) => {
     } else {
         selectedContacts.value.splice(index, 1);
     }
-}
+};
 
 const toggleSelectMode = () => {
     isSelectMode.value = !isSelectMode.value;
     if (!isSelectMode.value) {
         selectedContacts.value = [];
     }
-}
+};
 
 const deleteContacts = () => {
-
     for (const [key, value] of Object.entries(selectedContacts.value)) {
-        axios.delete(route('contacts.destroy', value))
-            .then(response => {
+        axios
+            .delete(route('contacts.destroy', value))
+            .then((response) => {
                 contacts.value.splice(key);
 
                 isSelectMode.value = false;
                 selectedContacts.value = [];
-
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
             });
     }
-}
+};
 
 onMounted(() => {
     fetchContacts();
-})
+});
 </script>
 
 <template>
@@ -101,11 +100,12 @@ onMounted(() => {
         <ul role="list" class="mx-2 flex-1 overflow-y-auto">
             <li v-for="person in contacts" :key="person.id">
                 <div
-                    class="group flex w-full items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50 cursor-pointer"
+                    class="group flex w-full cursor-pointer items-center justify-between gap-x-3 rounded-md p-4 text-sm font-semibold leading-6 hover:bg-gray-50"
                     :class="{
                         'bg-blue-50': selectedContacts.includes(person.id),
                     }"
-                    @click="isSelectMode ? toggleContactSelection(person.id) : router.get(route('chats.show',{id: person.contact_id}))"
+                    @click="isSelectMode ? toggleContactSelection(person.id) : (router.get(route('chats.show', { id: person.contact_id })), store.showContactsList = false)"
+
                 >
                     <div class="flex items-center gap-x-3">
                         <Avatar :fullName="person.name" :avatarUrl="person.avatar" />

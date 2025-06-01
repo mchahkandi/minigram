@@ -10,7 +10,7 @@
                         <Avatar :fullName="conversation.model.name" :avatarUrl="conversation.model.avatar" />
                         <div class=" flex flex-col">
                             <h1 class="text-lg font-semibold text-gray-800">{{ conversation.model.name }}</h1>
-                            <p dir="rtl" class="text-sm text-gray-500">{{ conversation.type == 'chat' ? conversation.model.last_seen : `${conversation.model.members_count} مشترک` }}</p>
+                            <p dir="rtl" class="text-sm text-left text-gray-500">{{ conversation.type == 'chat' ? conversation.model.last_seen : `${conversation.model.members_count} مشترک` }}</p>
                         </div>
                     </div>
                 </template>
@@ -121,10 +121,14 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import Button from '@/components/Button.vue';
 import Modal from '@/components/Modal.vue';
 import { ref } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { router, Link, usePage } from '@inertiajs/vue3';
 
 const conversation = useConversationStore();
 const store = useGlobalStore();
+
+const page = usePage();
+
+const user = page.props.auth.user;
 
 
 const deleteModalOpen = ref(false);
@@ -134,9 +138,16 @@ function openDeleteModal() {
 }
 
 const deleteChat = ( () => {
-    const rt = `${conversation.type}s.${conversation.type == 'chat' ? 'destroy' : 'leave'}`;
-
-    router.delete(route(rt,conversation.model.id));
+    function rt() {
+        if (conversation.type == 'chat') {
+            return 'chats.destroy'
+        }else if (user.id === conversation?.model?.owner_id) {
+            return 'rooms.destroy'
+        }else{
+            return 'rooms.leave'
+        }
+    }
+    router.delete(route(rt(),conversation.model.id));
 })
 
 const goBack = () => {

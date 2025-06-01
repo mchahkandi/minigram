@@ -23,9 +23,15 @@ class RoomController extends Controller
 
         $room = Room::create($data);
 
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars');
+            $room->avatar = $path;
+        }
+        $room->save();
+
         $room->members()->attach(Auth::id());
 
-        return back()->with(['message' => 'deleted successfully'], 200);
+        return redirect()->route('rooms.show',$room->id);
     }
 
     public function show(Room $room)

@@ -11,13 +11,16 @@ export const useGlobalStore = defineStore('global', {
             newRoomType: ref(''),
             showAddUsers: ref(false),
             showEditProfileSlider: ref(false),
-
+            conversationList: ref([]),
         }
     },
     actions: {
         createRoom(type: string) {
             this.newRoomType = type;
             this.showNewRoomSlider = true;
+        },
+        findConversation(route: string, type: string) {
+            return this.conversationList.find(item => item.route == route && item.type == type) || null;
         }
-    }
+    },
 })

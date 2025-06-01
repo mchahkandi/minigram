@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import ChatLayout from '@/components/chat/ChatLayout.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const props = defineProps<{
     room?: object;
@@ -27,13 +27,22 @@ const isOwner = computed(() => {
     return conversation.model?.type === 'group' || user.id === conversation.model?.owner_id;
 });
 
+onMounted(() => {
+    Echo.private(`rooms.${props.room?.id}`)
+        .listen("RoomMessageSent", (response) => {
+            if (response.message.messagable.id == conversation.model.id && conversation.type == 'room') {
+                conversation.messages[response.message.id] = response.message;
+            }
+        });
+});
+
 </script>
 
 <template>
     <AppLayout>
         <ChatLayout>
             <ChatHeader />
-            <ChatMiddle :messages="messages" :chat="room" />
+            <ChatMiddle />
             <ChatBottom v-if="isOwner" />
         </ChatLayout>
     </AppLayout>

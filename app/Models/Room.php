@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-
+use Illuminate\Support\Facades\Storage;
 
 
 class Room extends Model
@@ -37,5 +37,11 @@ class Room extends Model
     {
         return $this->members()->count();
     }
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ? asset(Storage::url($value)) : null;
+    }
+
 
 }

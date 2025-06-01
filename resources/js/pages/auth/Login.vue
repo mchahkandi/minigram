@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -54,14 +54,14 @@ const submit = () => {
                     </div>
 
                 </div>
-                
+
                 <button type="submit" class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                 <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />ورود</button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Don't have an account?
-<!--                <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>-->
+                حساب کاربری ندارید؟
+                <Link :href="route('register')" class="underline underline-offset-4" :tabindex="6">ثبت نام</Link>
             </div>
         </form>
     </AuthBase>

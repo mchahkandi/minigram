@@ -26,7 +26,6 @@ const form = useForm({
 const submit = () => {
     form.post(route('rooms.store'), {
         onSuccess: () => {
-            form.reset();
             handleClose();
         },
     });

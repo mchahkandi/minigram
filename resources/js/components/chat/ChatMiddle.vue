@@ -15,19 +15,14 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 import { useScrollBottom } from '@/composables/useScrollBottom';
 import { useConversationStore } from '@/stores/ConversationStore';
 
-const props = defineProps({
-    messages: Object,
-    chat: Object
-});
-
 const conversation = useConversationStore();
 
 const messagesContainer = ref(null);
-const localMessages = ref({ ...props.messages } || {});
+const localMessages = ref({ ...conversation.messages } || {});
 const { scrollToBottom } = useScrollBottom(messagesContainer);
 
 watch(
-    () => props.messages,
+    () => conversation.messages,
     (newMessages) => {
         localMessages.value = { ...newMessages };
     },
@@ -35,7 +30,7 @@ watch(
 );
 
 watch(
-    () => localMessages.value,
+    () => conversation.messages,
     async () => {
         await nextTick();
         scrollToBottom();
@@ -49,6 +44,10 @@ watch(() => conversation.scrollToMessageId, (newMessageId) => {
     }
 });
 
+onMounted( () => {
+    scrollToBottom();
+})
+
 function scrollToMessage(messageId) {
     const messageElement = messagesContainer.value?.querySelector(`[data-message-id="${messageId}"]`);
     if (messageElement) {
@@ -61,14 +60,6 @@ function scrollToMessage(messageId) {
         }, 2000);
     }
 }
-
-onMounted(() => {
-    Echo.private(`chats.${props.chat?.id}`)
-        .listen("ChatMessageSent", (response) => {
-            localMessages.value[response.message.id] = response.message;
-        });
-    scrollToBottom();
-});
 </script>
 
 <style scoped>

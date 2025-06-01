@@ -21,6 +21,7 @@ const submit = () => {
         <Head title="Register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
+            <p v-for="error in form.errors" >{{error}}</p>
             <div>
                 <label for="name" class="block text-right text-sm/6 font-medium text-gray-900">نام</label>
                 <div class="mt-2">
@@ -54,8 +55,8 @@ const submit = () => {
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
-                <Link :href="route('login')" class="underline underline-offset-4" :tabindex="6">Log in</Link>
+                از قبل حساب دارید؟
+                <Link :href="route('login')" class="underline underline-offset-4" :tabindex="6">ورود</Link>
             </div>
         </form>
     </AuthBase>

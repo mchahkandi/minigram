@@ -1,6 +1,7 @@
 // src/stores/useConversationStore.ts
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useGlobalStore } from '@/stores/GlobalStore';
 
 export const useConversationStore = defineStore('conversation', {
     state: () => ({
@@ -29,6 +30,9 @@ export const useConversationStore = defineStore('conversation', {
                 try {
                     const response = await axios.post(route(this.type == 'chat' ? 'chats.messages.seen' : 'rooms.messages.seen', [this.model.id, message_id]));
                     this.messages[message_id].is_read = true;
+                    const globalStore = useGlobalStore();
+                    let result = globalStore.findConversation(this.model.id, this.type);
+                    result.unread_messages -= 1;
                 } catch (error) {
                     console.error('Error:', error);
                 }

@@ -146,7 +146,8 @@ const id = conversation.model.id;
 const submit = () => {
     form.post(route(messageRoute.value, { id }), {
         onSuccess: () => {
-            form.reset();
+            form.content = '';
+            form.files = null;
             conversation.handleCloseReply();
         },
     });
