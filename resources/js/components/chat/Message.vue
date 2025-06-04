@@ -56,9 +56,17 @@ function openDeleteModal() {
 }
 
 function deleteMessage () {
-    router.delete(route('messages.destroy', [props.message.id]), {
-        onSuccess: () => deleteModalOpen.value = false,
-    })
+    if (conversation.type == 'chat') {
+        router.delete(route('messages.destroy', [props.message.id]), {
+            onSuccess: () => deleteModalOpen.value = false,
+
+        })
+    }else{
+        router.delete(route('rooms.messages.destroy', [conversation?.model?.id, props.message.id]), {
+            onSuccess: () => deleteModalOpen.value = false,
+        })
+    }
+    delete conversation.messages[props.message.id];
 }
 
 onMounted(() => {

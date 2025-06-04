@@ -71,4 +71,19 @@ class RoomMessageController extends Controller
 
         return response()->json(['messsage' => 'ok']);
     }
+
+    public function destroy(Room $room, Message $message)
+    {
+        if ($room->type == 'channel' && $room->owner_id !== Auth::id()) {
+            abort(403, "you are not admin");
+        }
+
+        if ($room->type == 'group' && !$room->members->contains(Auth::id()) && $message->user_id !== Auth::id() ) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $message->delete();
+
+        return back()->with(['message' => 'deleted successfully'], 200);
+    }
 }

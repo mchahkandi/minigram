@@ -35,6 +35,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::delete('rooms/{room}/leave', [RoomController::class, 'leave'])->name('rooms.leave');
     Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::post('rooms/{room}/messages', [RoomMessageController::class, 'store'])->name('rooms.messages.store');
+    Route::delete('rooms/{room}/messages/{message}', [RoomMessageController::class, 'destroy'])->name('rooms.messages.destroy');
     Route::get('rooms/{room}/messages/search', [RoomMessageController::class, 'search'])->name('rooms.messages.search');
     Route::post('rooms/{room}/messages/{message}/seen', [RoomMessageController::class, 'seen'])->name('rooms.messages.seen');
     Route::post('rooms/{room}/addusers', [RoomController::class, 'addUsers'])->name('rooms.addusers');
