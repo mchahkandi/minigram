@@ -65,7 +65,7 @@
                         </transition>
                     </Menu>
                 </div>
-                <input id="file" type="file" @input="form.files = $event.target.files" multiple class="hidden" ref="fileInput" />
+                <input id="file" type="file" @input="form.files = $event.target.files" @change="showModal = true" multiple class="hidden" ref="fileInput" />
             </div>
 
             <div class="ml-2 size-14 rounded-full bg-white p-4 shadow-sm">
@@ -75,27 +75,61 @@
             </div>
         </form>
 
-        <!-- Modal for File Preview -->
-        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div class="w-11/12 rounded-lg bg-white p-4 lg:w-1/3">
-                <h2 class="mb-2 text-lg font-bold">Preview Files</h2>
-                <div v-for="(file, index) in previewFiles" :key="index" class="mb-2">
-                    <div class="flex items-center">
-                        <span class="mr-2">{{ file.name }}</span>
-                        <input type="text" v-model="file.caption" placeholder="Add a caption" class="rounded border p-1" />
+
+        <Modal :open="showModal" @close="showModal = false">
+            <div class="py-4 px-8">
+                <h2 class="mb-4 text-lg font-semibold"> ارسال فایل </h2>
+                <div class="grid gap-6">
+                    <div
+                        v-for="(file, index) in form.files"
+                        :key="index"
+                        class="mb-2 flex items-start"
+                    >
+                        <!-- Preview on the left -->
+                        <template v-if="file.type.startsWith('image/')">
+                            <img
+                                :src="previewFile(file)"
+                                alt="preview"
+                                class="h-16 w-16 object-cover rounded"
+                            />
+                        </template>
+                        <template v-else>
+                            <div
+                                class="h-16 w-16 flex items-center justify-center rounded bg-gray-200 text-sm font-medium uppercase"
+                            >
+                                {{ file.name.split('.').pop() }}
+                            </div>
+                        </template>
+
+                        <!-- Name (right‑aligned) and size underneath -->
+                        <div class="ml-3 flex-1 text-right">
+                            <span class="block font-medium">{{ file.name }}</span>
+                            <span class="text-xs text-gray-500">{{ (file.size / 1024).toFixed(1) }} KB</span>
+                        </div>
                     </div>
-                    <img v-if="file.type.startsWith('image/')" :src="file.url" class="mt-2 h-auto w-full rounded" />
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button @click="sendFiles" class="rounded bg-blue-500 px-4 py-2 text-white">Send</button>
-                    <button @click="closeModal" class="ml-2 rounded bg-gray-300 px-4 py-2 text-black">Cancel</button>
+                    <div>
+                        <label for="content" class="block text-right text-sm/6 font-medium text-gray-900"> عنوان</label>
+                        <input
+                            id="content"
+                            type="text"
+                            v-model="form.content"
+                            class="mt-1 text-right block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 ring-1 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-600 sm:text-sm/6"
+                        />
+                    </div>
+
+                    <div class="flex gap-2">
+                        <Button @click.prevent="submit" class="mt-4 w-full" :tabindex="4" >
+                            ارسال
+                        </Button>
+                        <button class="mt-4 w-full rounded-md bg-gray-200" @click.prevent="showModal = false">بازگشت</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Modal>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { Smile, Paperclip, Send, Users, Megaphone } from 'lucide-vue-next';
 import EmojiPicker from 'vue3-emoji-picker';
@@ -104,6 +138,8 @@ import { useForm } from '@inertiajs/vue3';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import MessageReply from '@/components/chat/MessageReply.vue';
 import { useConversationStore } from '@/stores/ConversationStore.js';
+import Modal from '@/components/Modal.vue';
+import Button from '@/components/Button.vue';
 
 const message = ref('');
 const showEmojiPicker = ref(false);
@@ -117,6 +153,11 @@ const form = useForm({
     reply_id: computed(() => conversation.replyMessage?.id),
     files: null,
 });
+
+function previewFile(file) {
+    const objectURL = URL.createObjectURL(file);
+    return objectURL;
+}
 
 const autoResize = (event) => {
     const target = event.target;
@@ -149,6 +190,7 @@ const submit = () => {
             form.content = '';
             form.files = null;
             conversation.handleCloseReply();
+            showModal.value = false;
         },
     });
 };
