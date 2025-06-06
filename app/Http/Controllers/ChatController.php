@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class ChatController extends Controller
 {
-    public function show(int $user_id = null)
+    public function show(int|null $user_id = null)
     {
         if (!$user_id || !User::find($user_id)) {
             abort(404, 'User not found');

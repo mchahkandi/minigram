@@ -127,12 +127,14 @@ function formatPersianTime(timestamp) {
                         class="mb-5 px-3"
                     />
 
+                    <Attachments v-if="props.message.attachments?.length > 0" :message="props.message" :self="isSelf" />
+
+
                     <p class="body-2 outline-none text-black opacity-60">
                         {{ props.message.content }}
                     </p>
 
 
-                     <Attachments v-if="props.message.attachments?.length > 0" :message="props.message" :self="isSelf" />
 
                     <div dir="rtl" class="py-1 justify-self-end">
                         <p class="flex body-1 text-xs text-gray-500 text-color whitespace-pre">

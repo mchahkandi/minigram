@@ -1,272 +1,116 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
-import { ArrowDown, Play } from "lucide-vue-next";
+import { ArrowDownToLine } from "lucide-vue-next";
 import { computed, ref } from "vue";
+import { shorten } from '../../utils';
 
+import axios from 'axios';
 
 const props = defineProps<{
-    message: object;
+    message: {
+        attachments: Array<{
+            id: number;
+            file_name: string;
+            file_path: string;
+            file_url?: string;
+            file_size?: number;
+            file_type: string;
+        }>;
+    };
     self?: boolean;
 }>();
 
 const openCarousel: Ref<boolean> = ref(false);
-
 const selectedAttachmentId: Ref<number | undefined> = ref();
 
 const openCarouselWithAttachment = (attachmentId: number) => {
     selectedAttachmentId.value = attachmentId;
     openCarousel.value = true;
 };
+const closeCarousel = () => (openCarousel.value = false);
 
-// close the carousel
-const closeCarousel = () => {
-    openCarousel.value = false;
+const mediaAttachments = computed(() =>
+    props.message.attachments.filter((a) => ["png", "jpeg", "jpg", "webp", "gif", "mp4", "mov", "webm"].includes(a.file_type.toLowerCase())),
+);
+
+const containsMedia = computed(() => mediaAttachments.value.length > 0);
+const firstMediaAttachment = computed(() => mediaAttachments.value[0]);
+
+
+const isSingleImage = computed(
+    () => containsMedia.value && props.message.attachments.length === 1 && ["png", "jpeg", "jpg", "webp", "gif"].includes(firstMediaAttachment.value?.file_type.toLowerCase()),
+);
+
+const previewAttachment = (a: (typeof props.message.attachments)[number]) => {
+    if (["png", "jpeg", "jpg", "webp", "gif"].includes(a.file_type.toLowerCase())) return a.file_path;
+    if (["mp4", "mov", "webm"].includes(a.file_type.toLowerCase())) return a.file_url ?? a.file_path;
+    return "";
 };
 
-// check if the message contains images or videos
-const containsMedia = computed(() => {
-    if (props.message.attachments) {
-        for (let attachment of props.message.attachments) {
-            if (["image", "video"].includes(attachment.file_type)) return true;
-        }
-    }
-    return false;
-});
-
-// number of videos attached to this message.
-const numberOfMedia = computed(() => {
-    let counter = 0;
-
-    if (props.message.attachments) {
-        for (let attachment of props.message.attachments) {
-            if (["video", "image"].includes(attachment.file_type)) {
-                counter += 1;
-            }
-        }
-    }
-
-    return counter;
-});
-
-// test is the attachment is the second media item.
-const isNumber = (
-    attachment: object,
-    number: number,
-    largerThan?: boolean,
-) => {
-    let counter = 0;
-    let caseCorrect = false;
-
-    if (props.message.attachments) {
-        for (let item of props.message.attachments) {
-            if (["video", "image"].includes(item.file_type)) {
-                counter += 1;
-
-                if (largerThan) {
-                    if (item.id === attachment.id && counter > number) {
-                        caseCorrect = true;
-                    }
-                } else {
-                    if (item.id === attachment.id && counter === number) {
-                        caseCorrect = true;
-                    }
-                }
-            }
-        }
-    }
-
-    return caseCorrect;
-};
+function downloadFile(file: { file_path: string, file_type: string, file_name: string }) {
+    axios.get(file.file_path, { responseType: 'blob' })
+        .then(response => {
+            const blob = new Blob([response.data], { type: file.file_type });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = file.file_name;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        })
+        .catch(console.error);
+}
 </script>
 
 <template>
-    <div>
-        <div class="flex">
-            <div
-                v-for="(attachment, index) in message.attachments"
-                :key="index"
-                class="mr-2 flex items-end"
-                :class="{ 'mt-4': containsMedia }"
-            >
-                <!--image-->
-                <button
-                    @click="openCarouselWithAttachment(attachment.id)"
-                    class="outline-none"
-                    :aria-label="
-            numberOfMedia > 2
-              ? (props.message.attachments as []).length -
-                1 +
-                ' more attachments'
-              : attachment.file_name
-          "
+    <div v-if="isSingleImage" class="pb-4">
+        <button
+            @click="openCarouselWithAttachment(firstMediaAttachment!.id)"
+            class="outline-none"
+            :aria-label="firstMediaAttachment!.file_name"
+        >
+            <img
+                :src="firstMediaAttachment!.file_path"
+                :alt="firstMediaAttachment!.file_name"
+                class="w-full max-w-[22rem] rounded-lg object-cover"
+            />
+        </button>
+    </div>
+
+    <div v-else class="pb-4">
+        <div
+            v-for="(attachment, index) in props.message.attachments"
+            :key="attachment.id ?? index"
+            class="mb-2 flex items-start"
+        >
+            <button @click.prevent="downloadFile(attachment)" class="relative h-16 w-16 rounded overflow-hidden">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black/10 z-10"
                 >
-                    <div
-                        v-if="!isNumber(attachment, 2, true)"
-                        :style="{ backgroundImage: `url(${attachment.file_path})` }"
-                        class="rounded bg-cover bg-center"
-                        :class="
-              numberOfMedia === 1
-                ? ['w-[12.5rem]', 'h-[12.5rem]']
-                : [
-                    'md:w-[6.875rem]',
-                    'md:h-[6.25rem]',
-                    'xs:w-[6.25rem]',
-                    'xs:h-[5.9375rem]',
-                  ]
-            "
-                    >
-                        <!--first image-->
-                        <div
-                            v-if="isNumber(attachment, 1)"
-                            class="w-full h-full flex justify-center items-center rounded bg-black bg-opacity-20 hover:bg-opacity-10 transition duration-200"
-                        ></div>
-
-                        <!--more images overlay-->
-                        <div
-                            v-if="isNumber(attachment, 2) && numberOfMedia > 2"
-                            class="w-full h-full flex items-center justify-center rounded bg-black bg-opacity-40 text-white hover:bg-opacity-10 transition duration-200"
-                        >
-                            {{ (props.message.attachments as []).length - 1 }}+
-                        </div>
-                    </div>
-                </button>
-
-                <!--video-->
-                <button
-                    v-if="attachment.file_type === 'video'"
-                    @click="openCarouselWithAttachment(attachment.id)"
-                    class="overflow-hidden outline-none"
-                    :aria-label="
-            numberOfMedia > 2
-              ? (props.message.attachments as []).length -
-                1 +
-                ' more attachments'
-              : attachment.file_name
-          "
-                >
-                    <div
-                        v-if="!isNumber(attachment, 2, true)"
-                        :style="{ backgroundImage: `url(${attachment.file_url})` }"
-                        class="rounded bg-cover bg-center"
-                        :class="
-              numberOfMedia === 1
-                ? ['w-[12.5rem]', 'h-[12.5rem]']
-                : [
-                    'md:w-[6.875rem]',
-                    'md:h-[6.25rem]',
-                    'xs:w-[6.25rem]',
-                    'xs:h-[5.9375rem]',
-                  ]
-            "
-                    >
-                        <!--first video-->
-                        <div
-                            v-if="isNumber(attachment, 1)"
-                            class="w-full h-full flex justify-center items-center rounded bg-black bg-opacity-20 hover:bg-opacity-10 transition duration-200"
-                        >
-              <span
-                  class="p-3 rounded-full bg-white bg-opacity-40 transition-all duration-200"
-              >
-                <Play class="w-5 h-5 text-white" />
-              </span>
-                        </div>
-
-                        <!--second video-->
-                        <div
-                            v-else-if="isNumber(attachment, 2) && numberOfMedia < 3"
-                            class="w-full h-full flex justify-center items-center rounded bg-black bg-opacity-20 hover:bg-opacity-10 transition duration-200"
-                        >
-              <span
-                  class="p-3 rounded-full bg-white bg-opacity-40 transition-all duration-200"
-              >
-                <Play class="w-5 h-5 text-white" />
-              </span>
-                        </div>
-
-                        <!--more videos overlay-->
-                        <div
-                            v-else-if="isNumber(attachment, 2) && numberOfMedia > 2"
-                            class="w-full h-full flex items-center justify-center rounded bg-black bg-opacity-40 text-white hover:bg-opacity-10 transition duration-200"
-                        >
-                            {{ (props.message.attachments as []).length - 1 }}+
-                        </div>
-                    </div>
-                </button>
-
-                <!--file-->
-                <div v-if="attachment.file_type === 'file' && !containsMedia">
-                    <div class="flex">
-                        <!--download button / icons-->
-                        <button
-                            c
-                            class="w-8 h-8 mr-4 flex justify-center rounded-full outline-none items-center duration-200"
-                            :class="
-                props.self
-                  ? ['bg-indigo-300']
-                  : [
-                      'bg-indigo-50',
-                      'hover:bg-indigo-100',
-                      'active:bg-indigo-200',
-                      'dark:bg-gray-400',
-                      'dark:hover:bg-gray-300',
-                      'dark:focus:bg-gray-300',
-                      'dark:active:bg-gray-200',
-                    ]
-              "
-                        >
-                            <ArrowDown
-                                class="stroke-2 h-5 w-5"
-                                :class="
-                  props.self
-                    ? ['text-white']
-                    : ['text-blue-500', 'dark:text-gray-50']
-                "
-                            />
-                        </button>
-
-                        <div class="flex flex-col justify-center">
-                            <p
-                                class="heading-2 mb-3"
-                                :class="
-                  props.self
-                    ? ['text-black opacity-50 dark:text-white dark:opacity-70 ']
-                    : [
-                        'text-black',
-                        'opacity-50',
-                        'dark:text-white',
-                        'dark:opacity-70',
-                      ]
-                "
-                            >
-                                {{ attachment.file_name }}
-                            </p>
-
-                            <p
-                                class="body-2"
-                                :class="
-                  props.self
-                    ? ['text-black opacity-60 dark:text-white dark:opacity-70']
-                    : [
-                        'text-black',
-                        'opacity-50',
-                        'dark:text-white',
-                        'dark:opacity-70',
-                      ]
-                "
-                            >
-                                {{ attachment.file_size }}
-                            </p>
-                        </div>
-                    </div>
+                    <ArrowDownToLine class="h-5 w-5 text-white" />
                 </div>
-            </div>
+            <template v-if="['png', 'jpeg', 'jpg', 'webp', 'gif'].includes(attachment.file_type.toLowerCase())">
+                <img
+                    :src="previewAttachment(attachment)"
+                    alt="preview"
+                    class="h-16 w-16 object-cover rounded"
+                />
+            </template>
+            <template v-else>
+                <div
+                    class="h-16 w-16 flex items-center justify-center rounded bg-gray-300 text-sm font-medium uppercase"
+                >
+                </div>
+            </template>
+            </button>
 
-            <!--carousel modal-->
-<!--            <Carousel-->
-<!--                :open="openCarousel"-->
-<!--                :starting-id="selectedAttachmentId as number"-->
-<!--                :close-carousel="closeCarousel"-->
-<!--            />-->
+            <!-- File info -->
+            <div class="ml-3 flex-1 text-right">
+                <span class="block font-medium">{{ shorten(attachment.file_name) }}</span>
+                <span class="text-xs text-gray-500"
+                >{{ ((attachment.file_size ?? 0) / 1024).toFixed(1) }} KB</span
+                >
+            </div>
         </div>
     </div>
+
 </template>

@@ -5,6 +5,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomMessageController;
+use App\Http\Controllers\AttachmentControler;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +41,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('rooms/{room}/messages/{message}/seen', [RoomMessageController::class, 'seen'])->name('rooms.messages.seen');
     Route::post('rooms/{room}/addusers', [RoomController::class, 'addUsers'])->name('rooms.addusers');
 
+    Route::get('attachments/{attachment}', [AttachmentControler::class, 'download'])->name('attachments.download');
 
 });
 
