@@ -73,18 +73,11 @@ import Profile from '@/components/Profile.vue';
 import AddUsers from '@/components/AddUsers.vue';
 import EditProfile from '@/components/EditProfile.vue';
 import { shorten } from '../../utils';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import moment from 'moment-jalaali';
 import { computed } from 'vue';
-import { router } from '@inertiajs/vue3';
-import { nextTick } from 'vue';
-import Button from '@/components/Button.vue';
-
-
-
 
 const store = useGlobalStore()
-
 
 const page = usePage();
 
@@ -129,6 +122,43 @@ function formatPersianDate(dateStr: string): string {
         return m.format('jD jMMMM');
     }
 }
+
+const user = page.props.auth.user;
+
+onMounted(() => {
+    Echo.private(`users.${user?.id}`)
+        .stopListening("chatMessageSent")
+        .listen("ChatMessageSent", (response) => {
+            console.log(response);
+            const item = store.findConversation(response.message.user_id, 'chat');
+            if (item) {
+                item.unread_messages += 1;
+                item.last_message = response.message.content;
+                item.last_update = response.message.created_at;
+            }else {
+                const sender = response.message.messagable.user_one_id == response.message.user_id
+                    ? response.message.messagable.user_one
+                    : response.message.messagable.user_two
+
+                const newConversation = {
+                    title: sender.name,
+                    unread_messages: 1,
+                    last_message: response.message.content,
+                    last_update: response.message.created_at,
+                    type: 'chat',
+                    route: sender.id,
+                };
+
+                store.conversationList.push(newConversation);
+            }
+        });
+
+});
+
+onUnmounted( () => {
+    Echo.private(`users.${user?.id}`)
+        .stopListening("ChatMessageSent");
+})
 
 
 

@@ -30,7 +30,17 @@ class ChatMessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
+        $senderId = $this->message->user_id;
+        $messagable = $this->message->messagable;
+
+        $recipientId = $messagable->user_one_id == $senderId
+            ? $messagable->user_two_id
+            : $messagable->user_one_id;
+        $this->message->messagable->load(['userOne', 'userTwo']);
+
+
         return [
+            new PrivateChannel("users.{$recipientId}"),
             new PrivateChannel("chats.{$this->message->messagable->id}"),
         ];
     }

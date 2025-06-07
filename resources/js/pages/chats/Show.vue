@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import ChatHeader from '@/components/chat/ChatHeader.vue';
 import ChatMiddle from '@/components/chat/ChatMiddle.vue';
 import ChatBottom from '@/components/chat/ChatBottom.vue';
@@ -23,12 +23,18 @@ conversation.messages = props.messages;
 
 onMounted(() => {
     Echo.private(`chats.${props.chat?.id}`)
+        .stopListening("ChatMessageSent")
         .listen("ChatMessageSent", (response) => {
             if (response.message?.messagable?.id == conversation?.model?.chat?.id && conversation?.type == 'chat') {
                 conversation.messages[response.message.id] = response.message;
             }
         });
 });
+
+onUnmounted( () => {
+    Echo.private(`chats.${props.chat?.id}`)
+        .stopListening("ChatMessageSent");
+})
 
 </script>
 
