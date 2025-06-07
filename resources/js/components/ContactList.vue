@@ -41,16 +41,13 @@ const deleteContacts = () => {
     for (const [key, value] of Object.entries(selectedContacts.value)) {
         axios
             .delete(route('contacts.destroy', value))
-            .then((response) => {
-                contacts.value.splice(key);
-
-                isSelectMode.value = false;
-                selectedContacts.value = [];
-            })
             .catch((error) => {
                 console.log(error);
             });
     }
+    selectedContacts.value = [];
+    isSelectMode.value = false;
+    fetchContacts();
 };
 
 onMounted(() => {
