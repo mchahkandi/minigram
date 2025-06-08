@@ -126,7 +126,7 @@ onMounted(() => {
                 </div>
             </li>
         </ul>
-        <Create />
+        <Create @contactAdded="fetchContacts()" />
     </SliderContainer>
 </template>
 

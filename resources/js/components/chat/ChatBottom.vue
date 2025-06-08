@@ -1,6 +1,6 @@
 <template>
     <div v-show="!(conversation.isSearching)" class="z-10 w-full">
-        <div class="relative mt-2 transition-all duration-200 lg:ml-32 lg:mr-48">
+        <div class="relative mt-2 ml-2 mr-[5rem] transition-all duration-200 lg:ml-32 lg:mr-48">
             <MessageReply :show="conversation.isReplying" @closeReply="conversation.handleCloseReply" />
         </div>
         <form @submit.prevent="submit" class="mx-2 mb-6 mt-1 flex items-center justify-center">

@@ -53,11 +53,11 @@ function scrollToMessage(messageId) {
     if (messageElement) {
         messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        // Highlight the message temporarily
         messageElement.classList.add('highlight-message-active');
         setTimeout(() => {
             messageElement.classList.remove('highlight-message-active');
         }, 2000);
+
     }
 }
 </script>
@@ -69,5 +69,14 @@ function scrollToMessage(messageId) {
 
 .scrollbar-hidden::-webkit-scrollbar {
     display: none;
+}
+
+.highlight-message-active {
+    animation: nextDivFade 2s ease-in-out;
+}
+
+@keyframes nextDivFade {
+    0%   { background-color: #B1C8FA; }
+    100% { background-color: transparent; }
 }
 </style>

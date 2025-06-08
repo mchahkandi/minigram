@@ -8,6 +8,7 @@ import InputError from '@/components/InputError.vue';
 
 const modalOpen = ref(false);
 
+const emit = defineEmits(['contactAdded']);
 function openModal() {
     modalOpen.value = true;
 }
@@ -22,6 +23,7 @@ const submit = () => {
         onSuccess: () => {
             form.reset();
             modalOpen.value = false;
+            emit('contactAdded');
         },
     });
 };

@@ -66,14 +66,13 @@ import CreateRoom from '@/components/CreateRoom.vue';
 import ContactList from '@/components/ContactList.vue';
 import Avatar from '@/components/Avatar.vue';
 import { useConversationStore } from '@/stores/ConversationStore';
-import { Megaphone, MenuIcon, CircleUser, User, Users } from 'lucide-vue-next';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
+import { MenuIcon, } from 'lucide-vue-next';
 import { useGlobalStore } from '@/stores/GlobalStore.js';
 import Profile from '@/components/Profile.vue';
 import AddUsers from '@/components/AddUsers.vue';
 import EditProfile from '@/components/EditProfile.vue';
 import { shorten } from '../../utils';
-import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import moment from 'moment-jalaali';
 import { computed } from 'vue';
 
@@ -127,21 +126,30 @@ const user = page.props.auth.user;
 
 onMounted(() => {
     Echo.private(`users.${user?.id}`)
-        .stopListening("chatMessageSent")
+        .stopListening("ChatMessageSent")
         .listen("ChatMessageSent", (response) => {
-            console.log(response);
-            const item = store.findConversation(response.message.user_id, 'chat');
+            const sender = response.message.messagable.user_one_id == response.message.user_id
+                ? response.message.messagable.user_one
+                : response.message.messagable.user_two
+
+            const receiver = response.message.messagable.user_one_id == response.message.user_id
+                ? response.message.messagable.user_two
+                : response.message.messagable.user_one
+
+            const isCurrentUser = user?.id == sender?.id;
+
+            const item = store.findConversation(isCurrentUser ? receiver.id : sender.id, 'chat');
             if (item) {
-                item.unread_messages += 1;
+                if (user?.id !== response.message.user_id) {
+                    item.unread_messages += 1;
+                }
                 item.last_message = response.message.content;
                 item.last_update = response.message.created_at;
             }else {
-                const sender = response.message.messagable.user_one_id == response.message.user_id
-                    ? response.message.messagable.user_one
-                    : response.message.messagable.user_two
 
                 const newConversation = {
                     title: sender.name,
+                    avatar: sender.avatar,
                     unread_messages: 1,
                     last_message: response.message.content,
                     last_update: response.message.created_at,
@@ -153,11 +161,42 @@ onMounted(() => {
             }
         });
 
+    Echo.private(`users.${user?.id}`)
+        .stopListening("RoomMessageSent")
+        .listen("RoomMessageSent", (response) => {
+            console.log(response);
+            const item = store.findConversation(response.message.messagable.id, 'room');
+            if (item) {
+                if (user?.id !== response.message.user_id) {
+                    item.unread_messages += 1;
+                }
+                item.last_message = response.message.content;
+                item.last_update = response.message.created_at;
+            }else {
+                const room = response.message.messagable;
+
+                const newConversation = {
+                    title: room.name,
+                    avatar: room.avatar,
+                    unread_messages: 1,
+                    last_message: response.message.content,
+                    last_update: response.message.created_at,
+                    type: 'room',
+                    route: room.id,
+                };
+
+                store.conversationList.push(newConversation);
+            }
+        });
+
 });
 
 onUnmounted( () => {
     Echo.private(`users.${user?.id}`)
         .stopListening("ChatMessageSent");
+
+    Echo.private(`users.${user?.id}`)
+        .stopListening("RoomMessageSent");
 })
 
 

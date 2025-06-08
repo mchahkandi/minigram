@@ -163,7 +163,7 @@ function formatPersianTime(timestamp) {
                     <div class="grid gap-6">
                         <p>از حذف پیام مطمئن هستید؟</p>
                         <div class="flex gap-2">
-                            <Button @click.prevent="deleteMessage" class="mt-4 w-full" :tabindex="4" >
+                            <Button @click.prevent="deleteMessage" class="mt-4 w-full bg-red-500 hover:bg-red-600" :tabindex="4" >
                                 حذف
                             </Button>
                             <button class="mt-4 w-full rounded-md bg-gray-200" @click.prevent="deleteModalOpen = false">بازگشت</button>

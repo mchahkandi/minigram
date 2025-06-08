@@ -31,8 +31,15 @@ class RoomMessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        return [
-            new PrivateChannel("rooms.{$this->message->messagable->id}"),
-        ];
+        $members = $this->message->messagable->members;
+
+        $userChannels = collect($members)
+            ->map(fn($user) => new PrivateChannel("users.{$user->id}"))
+            ->all();
+
+        return array_merge(
+            $userChannels,
+            [new PrivateChannel("rooms.{$this->message->messagable->id}")]
+        );
     }
 }
