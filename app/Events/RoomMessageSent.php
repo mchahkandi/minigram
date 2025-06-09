@@ -31,6 +31,8 @@ class RoomMessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
+        $this->message->load(['replied', 'attachments']);
+
         $members = $this->message->messagable->members;
 
         $userChannels = collect($members)

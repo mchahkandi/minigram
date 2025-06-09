@@ -51,6 +51,7 @@ function submit() {
         forceFormData: true,
         onSuccess: () => {
             form.reset();
+            handleClose();
         },
     });
 }

@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         foreach (['group', 'channel'] as $type) {
             for ($i = 1; $i <= 3; $i++) {
                 $room = Room::create([
-                    'name' => fake()->text(10),
+                    'name' => fake()->word(),
                     'link' => fake()->unique()->userName(),
                     'type' => $type,
                     'owner_id' => $mainUser->id,

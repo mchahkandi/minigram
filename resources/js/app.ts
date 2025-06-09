@@ -42,12 +42,6 @@ createInertiaApp({
     },
     progress: {
         color: '#4B5563',
+        preserveScroll: true,
     },
 });
-
-import { router } from '@inertiajs/vue3'
-
-router.on('success', (event) => {
-    const myStore = useGlobalStore();
-    myStore.$reset();
-})

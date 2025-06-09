@@ -31,7 +31,7 @@ class RoomController extends Controller
 
         $room->members()->attach(Auth::id());
 
-        return redirect()->route('rooms.show',$room->id);
+        return to_route('rooms.show', $room->id);
     }
 
     public function show(Room $room)

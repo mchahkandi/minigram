@@ -3,14 +3,14 @@
         <!-- Static sidebar for desktop -->
         <div v-if="!isMobile || isDashboard" class=" md:fixed md:inset-y-0 md:z-30 md:flex md:w-80 md:flex-col lg:w-96">
             <!-- Sidebar component, swap this element with another sidebar if you like -->
-            <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+            <div scroll-region="" class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-4">
                 <div class="flex h-16 shrink-0 items-center gap-2">
                     <div>
                         <button @click.prevent="store.showProfileSlider = true" class="inline-flex size-12 justify-center items-center gap-x-1.5 rounded-full text-sm font-semibold text-gray-900 hover:bg-gray-50">
                             <MenuIcon class="size-5 text-gray-800" aria-hidden="true" />
                         </button>
                     </div>
-                    <p>minigram</p>
+                    <p>مینی‌گرام</p>
                 </div>
                 <nav class="flex flex-1 flex-col">
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -18,10 +18,11 @@
                             <ul role="list" class="-mx-2 overflow-hidden">
                                 <li v-for="item in sortedConversations" :key="item.title">
                                     <Link
+                                        preserve-scroll
                                         :href="route(item.type == 'chat' ? 'chats.show' : 'rooms.show',{id: item.route})"
                                         :class="[
                                             isCurrentConversation(item) ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-50',
-                                            'group flex gap-x-3 rounded-md p-4 text-sm font-semibold leading-6',
+                                            'group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6',
                                         ]"
                                     >
                                         <Avatar :fullName="item.title" :avatarUrl="item.avatar"/>
@@ -29,7 +30,7 @@
                                             <h2 :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-900', 'text-base font-bold flex justify-between']">{{ item.title }}
                                             <span :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500', 'text-xs font-thin']">{{ formatPersianDate(item.last_update) }}</span>
                                             </h2>
-                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','p-1 text-gray-500 font-normal truncate']">{{ shorten(item.last_message,28) }}</p>
+                                            <p :class="[isCurrentConversation(item) ? 'text-white' : 'text-gray-500','p-1 text-gray-500 font-normal truncate']">{{ shorten(item.last_message,33) }}</p>
                                         </div>
                                         <span
                                             v-if="item.unread_messages > 0"
