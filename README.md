@@ -1,6 +1,6 @@
 # ChitChat
 
-Welcome to the ChitChat Web App! This application is built using Laravel, Vue.js, Inertia.js, and Reverb, providing a modern and responsive user experience similar to Telegram. This README will guide you through the setup process and provide an overview of the project structure.
+This application is built using Laravel, Vue.js, Inertia.js, and Reverb, providing a modern and responsive user experience. This README will guide you through the setup process and provide an overview of the project structure.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ Welcome to the ChitChat Web App! This application is built using Laravel, Vue.js
 - User authentication (registration, login, logout)
 - Real-time messaging
 - User profiles and contact management
-- Group chats
+- Group chats, Channels
 - Media sharing (images, files)
 
 ## Requirements
@@ -38,14 +38,14 @@ Follow these steps to set up the project on your local machine:
    Open your terminal and run the following command:
 
    ```bash
-   git clone https://github.com/mchahkandi/chitchat.git
+   git clone https://github.com/mchahkandi/minigram.git
    ```
 
 
 2. **Navigate to the Project Directory**
 
    ```bash
-   cd chitchat
+   cd minigram
    ```
 
 3. **Install PHP Dependencies**
@@ -121,8 +121,22 @@ To start the development server, run:
 composer run dev
 ```
 
+then run the websocket server:
+
+```bash
+php artisan reverb:start
+```
+
 This will start the server at `http://localhost:8000`. You can access the app in your web browser.
 
+
+## Screenshots
+
+* **Chats page:**
+  ![Chat Interface Screenshot](public/assets/img/screenshot.png)
+
+* **Landing page:**
+  ![Landing Page Screenshot](public/assets/img/landing.png)
 
 ---
 
