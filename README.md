@@ -4,11 +4,21 @@ This application is built using Laravel, Vue.js, Inertia.js, and Reverb, providi
 
 ## Table of Contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
+
+## Screenshots
+
+* **Chats page:**
+  ![Chat Interface Screenshot](public/assets/img/screenshot.png)
+
+* **Landing page:**
+  ![Landing Page Screenshot](public/assets/img/landing.png)
+
 
 ## Features
 
@@ -128,15 +138,6 @@ php artisan reverb:start
 ```
 
 This will start the server at `http://localhost:8000`. You can access the app in your web browser.
-
-
-## Screenshots
-
-* **Chats page:**
-  ![Chat Interface Screenshot](public/assets/img/screenshot.png)
-
-* **Landing page:**
-  ![Landing Page Screenshot](public/assets/img/landing.png)
 
 ---
 
