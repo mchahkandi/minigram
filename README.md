@@ -1,4 +1,4 @@
-# ChitChat
+# MiniGram
 
 This application is built using Laravel, Vue.js, Inertia.js, and Reverb, providing a modern and responsive user experience. This README will guide you through the setup process and provide an overview of the project structure.
 
